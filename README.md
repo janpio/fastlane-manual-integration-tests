@@ -8,3 +8,4 @@ The steps necessary to executes these manual tests are documented in the project
 
 - [iOS](ios/)
 - [Android](android/)
+- [Platform independent](general/)

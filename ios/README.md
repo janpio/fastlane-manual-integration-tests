@@ -70,6 +70,33 @@ fastlane ios testflight (upload_to_testflight)
 fastlane pilot distribute
 ```
 
+## Actions to integrate
+
+```
+# extracted from private testing `Fastfile`
+register_devices
+clear_derived_data
+version_get_podspec
+xcodebuild
+testfairy
+set_info_plist_value
+update_info_plist
+crashlytics
+update_project_provisioning
+automatic_code_signing
+download_dsyms
+upload_symbols_to_crashlytics
+app_store_build_info
+app_store_build_number
+appetize
+latest_testflight_build_number
+update_url_schemes
+create_keychain
+get_version_number
+verify_build
+increment_build_number
+```
+
 ## Not covered
 
 ```
