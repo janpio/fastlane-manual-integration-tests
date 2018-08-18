@@ -5,6 +5,8 @@
 A list of fastlane CLI commands and hypothetical lanes (with the actions they execute) that can be used to test:
 
 ```
+fastlane init
+
 # screenshots
 fastlane screengrab init
 fastlane android config_screengrab

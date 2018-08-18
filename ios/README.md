@@ -5,6 +5,8 @@
 A list of fastlane CLI commands and hypothetical lanes (with the actions they execute) that can be used to test:
 
 ```
+fastlane init
+
 # test
 fastlane scan init
 fastlane ios config_scan
