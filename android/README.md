@@ -7,14 +7,18 @@ A list of fastlane CLI commands and hypothetical lanes (with the actions they ex
 ```
 fastlane init
 
-# screenshots
-fastlane screengrab init
-fastlane android config_screengrab
-fastlane screengrab
-fastlane android screenshots (capture_android_screenshots)
+fastlane android create_appfile
 
 # build with gradle
 fastlane android build (gradle)
+
+# screenshots
+fastlane screengrab init
+fastlane android config_screengrab
+fastlane android add_screengrab_to_project
+fastlane android build
+fastlane screengrab
+fastlane android screenshots (capture_android_screenshots)
 
 # manually create app here
 

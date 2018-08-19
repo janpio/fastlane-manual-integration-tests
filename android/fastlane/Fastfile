@@ -24,6 +24,7 @@ end
 lane :add_screengrab_to_project do
   package_name = CredentialsManager::AppfileConfig.try_fetch_value(:package_name)
 
+  # TODO:
   # modify build.gradle
   # old_line = '...'
   # new_lines = old_line + "\n..."
@@ -35,7 +36,7 @@ lane :add_screengrab_to_project do
   ensure_folder_exists(target)
   FileUtils.cp(source, target)
   #copy_artifacts(artifacts: source, target_path: target)
-  # replace_string_in_file('androidapp/app/src/debug/AndroidManifest.xml`, `foo`, package_name)
+  # TODO: replace_string_in_file('androidapp/app/src/debug/AndroidManifest.xml`, `foo`, package_name)
 
   # copy test file
   package_name_path = package_name.gsub('.', '/')
@@ -75,6 +76,10 @@ end
 
 lane :run_screengrab do
   run_fastlane('screengrab')
+end
+
+lane :screenshots do
+  capture_android_screenshots
 end
 
 #######################################################
