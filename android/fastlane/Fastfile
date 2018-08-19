@@ -7,6 +7,14 @@ lane :create_appfile do
   write_to_file('tools.fastlane.androidapp', 'Appfile')
 end
 
+lane :screengrab_init do |_options|
+  run_fastlane('screengrab init')
+end
+
+lane :config_screengrab do
+  write_to_file('', 'Screengrabfile')
+end
+
 #######################################################
 
 def create_file(file)
@@ -17,3 +25,10 @@ def write_to_file(string, file)
   # TODO: handle array
   sh('echo ' + string + ' >> ' + file)
 end
+
+def run_fastlane(command)
+  Dir.chdir '..' do
+    sh('bundle exec fastlane ' + command)
+  end
+end
+
