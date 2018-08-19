@@ -15,6 +15,68 @@ lane :config_screengrab do
   write_to_file('', 'Screengrabfile')
 end
 
+lane :config_project_build_and_run_screengrab do
+  add_screengrab_to_project
+  build
+  run_screengrab
+end
+
+lane :add_screengrab_to_project do
+  package_name = CredentialsManager::AppfileConfig.try_fetch_value(:package_name)
+
+  # modify build.gradle
+  # old_line = '...'
+  # new_lines = old_line + "\n..."
+  # replace_string_in_file('androidapp/app/build.gradle', old_line, new_lines)
+
+  # copy src/debug/AndroidManifest.xml
+  source = 'screengrab-resources/AndroidManifest.xml'
+  target = '../androidapp/app/src/debug'
+  ensure_folder_exists(target)
+  FileUtils.cp(source, target)
+  #copy_artifacts(artifacts: source, target_path: target)
+  # replace_string_in_file('androidapp/app/src/debug/AndroidManifest.xml`, `foo`, package_name)
+
+  # copy test file
+  package_name_path = package_name.gsub('.', '/')
+  target = "../androidapp/app/src/androidTest/java/#{package_name_path}"
+  ensure_folder_exists(target)
+  FileUtils.cp("screengrab-resources/ScreengrabTest.java", target)
+  #copy_artifacts(artifacts: source, target_path: target)
+
+  puts "foo"
+end
+
+lane :build do
+  gradle(
+    task: 'clean',
+    project_dir: 'androidapp'
+  )
+
+  build_android_app(
+    task: 'assemble',
+    build_type: 'Debug',
+    project_dir: 'androidapp'
+  )
+  puts Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH].inspect
+  path = get_relative_path(Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH])
+  write_to_file('app_apk_path("'+ path +'")', 'Screengrabfile')
+
+  build_android_app(
+    task: 'assemble',
+    build_type: 'AndroidTest',
+    project_dir: 'androidapp'
+  )
+  puts Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH].inspect
+  path = get_relative_path(Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH])
+  write_to_file('tests_apk_path("'+ path +'")', 'Screengrabfile')
+
+end
+
+lane :run_screengrab do
+  run_fastlane('screengrab')
+end
+
 #######################################################
 
 def create_file(file)
@@ -32,3 +94,24 @@ def run_fastlane(command)
   end
 end
 
+def get_relative_path(absolute_path)
+  Dir.chdir '..' do
+    first = Pathname.new(absolute_path)
+    second = Pathname.new(Dir.pwd)
+
+    relative = first.relative_path_from second
+    relative.to_s
+  end
+end
+
+def self.replace_string_in_file(file, string, replacement)
+  data = File.read(file)
+  filtered_data = data.gsub(string, replacement)
+  File.open(file, "w") do |f|
+    f.write(filtered_data)
+  end
+end
+
+def ensure_folder_exists(folder)
+  Dir.exist?(folder) || FileUtils.mkdir_p(folder)
+end
