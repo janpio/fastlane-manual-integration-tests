@@ -1,0 +1,19 @@
+desc 'Experiment'
+  lane :experiment do |options|
+end
+
+lane :create_appfile do
+  create_file('Appfile')
+  write_to_file('tools.fastlane.androidapp', 'Appfile')
+end
+
+#######################################################
+
+def create_file(file)
+  sh('touch ' + file)
+end
+
+def write_to_file(string, file)
+  # TODO: handle array
+  sh('echo ' + string + ' >> ' + file)
+end
