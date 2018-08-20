@@ -1,85 +1,177 @@
-desc 'Experiment'
-  lane :experiment do |options|
-end
+default_platform('android')
 
-lane :create_appfile do
-  create_file('Appfile')
-  write_to_file('tools.fastlane.androidapp', 'Appfile')
-end
+platform :android do
+  lane :all do
+    create_appfile
 
-lane :screengrab_init do |_options|
-  run_fastlane('screengrab init')
-end
+    run_screengrab_init
+    config_screengrab
+    add_screengrab_to_project
+    build_for_screenshots
+    run_screengrab
+    screenshots
 
-lane :config_screengrab do
-  write_to_file('', 'Screengrabfile')
-end
+    build_release
 
-lane :config_project_build_and_run_screengrab do
-  add_screengrab_to_project
-  build
-  run_screengrab
-end
+    run_supply_init
+    prepare_metadata
+    run_supply
+    upload
+  end
 
-lane :add_screengrab_to_project do
-  package_name = CredentialsManager::AppfileConfig.try_fetch_value(:package_name)
+  #######################################################
 
-  # TODO:
-  # modify build.gradle
-  # old_line = '...'
-  # new_lines = old_line + "\n..."
-  # replace_string_in_file('androidapp/app/build.gradle', old_line, new_lines)
+  lane :create_appfile do
+    create_file('Appfile')
+    write_to_file('tools.fastlane.androidapp', 'Appfile')
+    write_to_file(ENV['GOOGLE_JSON_KEY_FILE_PATH'], 'Appfile')
+  end
 
-  # copy src/debug/AndroidManifest.xml
-  source = 'screengrab-resources/AndroidManifest.xml'
-  target = '../androidapp/app/src/debug'
-  ensure_folder_exists(target)
-  FileUtils.cp(source, target)
-  #copy_artifacts(artifacts: source, target_path: target)
-  # TODO: replace_string_in_file('androidapp/app/src/debug/AndroidManifest.xml`, `foo`, package_name)
+  #######################################################
 
-  # copy test file
-  package_name_path = package_name.gsub('.', '/')
-  target = "../androidapp/app/src/androidTest/java/#{package_name_path}"
-  ensure_folder_exists(target)
-  FileUtils.cp("screengrab-resources/ScreengrabTest.java", target)
-  #copy_artifacts(artifacts: source, target_path: target)
+  lane :run_screengrab_init do |_options|
+    run_fastlane('screengrab init')
+  end
 
-  puts "foo"
-end
+  lane :config_screengrab do
+    # Add empty line to file so later additions don't "hug" the template too much
+    write_to_file('', 'Screengrabfile')
+  end
 
-lane :build do
-  gradle(
-    task: 'clean',
-    project_dir: 'androidapp'
-  )
+  lane :add_to_project_and_build_and_run_screengrab do
+    add_screengrab_to_project
+    build_for_screengrab
+    run_screengrab
+  end
 
-  build_android_app(
-    task: 'assemble',
-    build_type: 'Debug',
-    project_dir: 'androidapp'
-  )
-  puts Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH].inspect
-  path = get_relative_path(Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH])
-  write_to_file('app_apk_path("'+ path +'")', 'Screengrabfile')
+  lane :add_screengrab_to_project do
+    package_name = CredentialsManager::AppfileConfig.try_fetch_value(:package_name)
 
-  build_android_app(
-    task: 'assemble',
-    build_type: 'AndroidTest',
-    project_dir: 'androidapp'
-  )
-  puts Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH].inspect
-  path = get_relative_path(Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH])
-  write_to_file('tests_apk_path("'+ path +'")', 'Screengrabfile')
+    # TODO: build.gradle
+    # modify build.gradle
+    # old_line = '...'
+    # new_lines = old_line + "\n..."
+    # replace_string_in_file('androidapp/app/build.gradle', old_line, new_lines)
 
-end
+    # copy src/debug/AndroidManifest.xml
+    source = 'screengrab-resources/AndroidManifest.xml'
+    target = '../androidapp/app/src/debug'
+    ensure_folder_exists(target)
+    FileUtils.cp(source, target)
+    # copy_artifacts(artifacts: source, target_path: target)
+    # TODO: replace_string_in_file('androidapp/app/src/debug/AndroidManifest.xml`, `foo`, package_name)
 
-lane :run_screengrab do
-  run_fastlane('screengrab')
-end
+    # copy test file
+    package_name_path = package_name.tr('.', '/')
+    target = "../androidapp/app/src/androidTest/java/#{package_name_path}"
+    ensure_folder_exists(target)
+    FileUtils.cp('screengrab-resources/ScreengrabTest.java', target)
+    # copy_artifacts(artifacts: source, target_path: target)
 
-lane :screenshots do
-  capture_android_screenshots
+    puts 'foo'
+  end
+
+  lane :build_for_screenshots do
+    gradle(
+      task: 'clean',
+      project_dir: 'androidapp'
+    )
+
+    build_android_app(
+      task: 'assemble',
+      build_type: 'Debug',
+      project_dir: 'androidapp'
+    )
+    apk = Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+    copy_artifacts(
+      fail_on_missing: false,
+      artifacts: apk
+    )
+    write_to_file('app_apk_path("artifacts/' + File.basename(apk) + '")', 'Screengrabfile')
+
+    build_android_app(
+      task: 'assemble',
+      build_type: 'AndroidTest',
+      project_dir: 'androidapp'
+    )
+    apk = Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+    copy_artifacts(
+      fail_on_missing: false,
+      artifacts: apk
+    )
+    write_to_file('tests_apk_path("artifacts/' + File.basename(apk) + '")', 'Screengrabfile')
+  end
+
+  lane :run_screengrab do
+    run_fastlane('screengrab')
+  end
+
+  lane :screenshots do
+    capture_android_screenshots
+  end
+
+  #######################################################
+
+  lane :build_release do
+    gradle(
+      task: 'clean',
+      project_dir: 'androidapp'
+    )
+
+    build_android_app(
+      task: 'assemble',
+      build_type: 'Release',
+      project_dir: 'androidapp',
+      properties: {
+        'android.injected.signing.store.file' => 'keystore.jks',
+        'android.injected.signing.store.password' => ENV['KEYSTORE_PASSWORD'],
+        'android.injected.signing.key.alias' => ENV['KEYSTORE_ALIAS'],
+        'android.injected.signing.key.password' => ENV['KEYSTORE_PASSWORD'],
+        # TODO: wtf wieso an so vielen Stellen das file nötig?
+      }
+    )
+    apk = Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+    copy_artifacts(
+      fail_on_missing: false,
+      artifacts: apk
+    )
+  end
+
+  #######################################################
+
+  # https://play.google.com/apps/publish/
+  # => CREATE APPLICATION
+  # language
+  # title
+  # => App releases
+  # Internal test => MANAGE
+  # => CREATE RELEASE
+  # OPT-OUT => CONFIRM
+  # => BROWSE FILES
+  # Done, now the app is connected to the package_name
+
+  lane :run_supply_init do
+    run_fastlane('supply init')
+  end
+
+  lane :prepare_metadata do
+    # TODO: https://github.com/stympy/faker
+    write_to_file('Changed Description!', 'metadata/android/de-DE/full_description.txt')
+    # TODO: Images
+  end
+
+  lane :run_supply do
+    run_fastlane('supply')
+  end
+
+  lane :upload do
+    upload_to_play_store(
+      track: 'alpha',
+      apk: 'artifacts/app-release.apk'
+    )
+  end
+
+  #######################################################
 end
 
 #######################################################
@@ -91,6 +183,7 @@ end
 def write_to_file(string, file)
   # TODO: handle array
   sh('echo ' + string + ' >> ' + file)
+  # TODO: replace by "set_in_file" that changes a value if the "method" already exists
 end
 
 def run_fastlane(command)
@@ -112,7 +205,7 @@ end
 def self.replace_string_in_file(file, string, replacement)
   data = File.read(file)
   filtered_data = data.gsub(string, replacement)
-  File.open(file, "w") do |f|
+  File.open(file, 'w') do |f|
     f.write(filtered_data)
   end
 end
