@@ -1,8 +1,25 @@
 default_platform('android')
 
+before_all do |lane, options|
+  unless lane_context[SharedValues::ENVIRONMENT]
+    UI.error("This `Fastfile` uses environments. Please supply an available environment via `--env <name>`")
+    raise('foo')
+  end
+end
+
+lane :environment do
+  UI.message(lane_context[SharedValues::ENVIRONMENT])
+  UI.message(ENV['PROJECT'])
+  UI.message(ENV['PACKAGE_NAME'])
+  UI.message(ENV['JSON_KEY_FILE'])
+end
+
 platform :android do
   lane :all do
     create_appfile
+
+    build_release # something to upload in next step
+    run_supply_init
 
     run_screengrab_init
     config_screengrab
@@ -13,7 +30,6 @@ platform :android do
 
     build_release
 
-    run_supply_init
     prepare_metadata
     run_supply
     upload
@@ -23,8 +39,27 @@ platform :android do
 
   lane :create_appfile do
     create_file('Appfile')
-    write_to_file('tools.fastlane.androidapp', 'Appfile')
-    write_to_file(ENV['GOOGLE_JSON_KEY_FILE_PATH'], 'Appfile')
+    write_to_file('package_name("' + ENV['PACKAGE_NAME'] + '")', 'Appfile')
+    write_to_file('json_key_file("' + ENV['JSON_KEY_FILE'] + '")', 'Appfile')
+  end
+
+  #######################################################
+
+  # https://play.google.com/apps/publish/
+  # => CREATE APPLICATION
+  # language
+  # title
+  # => App releases
+  # Internal test => MANAGE
+  # => CREATE RELEASE
+  # OPT-OUT => CONFIRM
+  # => BROWSE FILES
+  # fastlane android build_release
+  # Upload
+  # Done, now the app is connected to the package_name
+
+  lane :run_supply_init do
+    run_fastlane('supply init')
   end
 
   #######################################################
@@ -35,7 +70,7 @@ platform :android do
 
   lane :config_screengrab do
     # Add empty line to file so later additions don't "hug" the template too much
-    write_to_file('', 'Screengrabfile')
+    # write_to_file('', 'Screengrabfile') # TODO: On Windows this writes "ECHO is on." :/
   end
 
   lane :add_to_project_and_build_and_run_screengrab do
@@ -55,7 +90,7 @@ platform :android do
 
     # copy src/debug/AndroidManifest.xml
     source = 'screengrab-resources/AndroidManifest.xml'
-    target = '../androidapp/app/src/debug'
+    target = '../' + project + '/app/src/debug'
     ensure_folder_exists(target)
     FileUtils.cp(source, target)
     # copy_artifacts(artifacts: source, target_path: target)
@@ -63,7 +98,7 @@ platform :android do
 
     # copy test file
     package_name_path = package_name.tr('.', '/')
-    target = "../androidapp/app/src/androidTest/java/#{package_name_path}"
+    target = "../" + project + "/app/src/androidTest/java/#{package_name_path}"
     ensure_folder_exists(target)
     FileUtils.cp('screengrab-resources/ScreengrabTest.java', target)
     # copy_artifacts(artifacts: source, target_path: target)
@@ -74,13 +109,13 @@ platform :android do
   lane :build_for_screenshots do
     gradle(
       task: 'clean',
-      project_dir: 'androidapp'
+      project_dir: project
     )
 
     build_android_app(
       task: 'assemble',
       build_type: 'Debug',
-      project_dir: 'androidapp'
+      project_dir: project
     )
     apk = Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
     copy_artifacts(
@@ -92,7 +127,7 @@ platform :android do
     build_android_app(
       task: 'assemble',
       build_type: 'AndroidTest',
-      project_dir: 'androidapp'
+      project_dir: project
     )
     apk = Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
     copy_artifacts(
@@ -115,13 +150,13 @@ platform :android do
   lane :build_release do
     gradle(
       task: 'clean',
-      project_dir: 'androidapp'
+      project_dir: project
     )
 
     build_android_app(
       task: 'assemble',
       build_type: 'Release',
-      project_dir: 'androidapp',
+      project_dir: project,
       properties: {
         'android.injected.signing.store.file' => 'keystore.jks',
         'android.injected.signing.store.password' => ENV['KEYSTORE_PASSWORD'],
@@ -137,22 +172,7 @@ platform :android do
     )
   end
 
-  #######################################################
-
-  # https://play.google.com/apps/publish/
-  # => CREATE APPLICATION
-  # language
-  # title
-  # => App releases
-  # Internal test => MANAGE
-  # => CREATE RELEASE
-  # OPT-OUT => CONFIRM
-  # => BROWSE FILES
-  # Done, now the app is connected to the package_name
-
-  lane :run_supply_init do
-    run_fastlane('supply init')
-  end
+  ######################################################
 
   lane :prepare_metadata do
     # TODO: https://github.com/stympy/faker
