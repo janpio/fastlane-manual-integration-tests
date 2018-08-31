@@ -9,9 +9,11 @@ fastlane init
 
 # test
 fastlane scan init
+  fastlane ios run_scan_init
 fastlane ios config_scan
 fastlane scan
-fastlane ios test (run_tests)
+  fastlane ios run_scan
+fastlane ios tests (run_tests)
 
 # certificates
 fastlane match init

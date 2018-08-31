@@ -1,0 +1,44 @@
+default_platform('ios')
+
+platform :ios do
+  lane :all do
+    run_scan_init
+    config_scan
+    run_scan
+    tests
+  end
+
+  #######################################################
+
+  lane :run_scan_init do
+    run_fastlane('scan init')
+  end
+
+  lane :config_scan do
+    write_to_file('project("iosapp/iosapp.xcodeproj")', 'Scanfile')
+  end
+
+  lane :run_scan do
+    run_fastlane('scan')
+  end
+
+  lane :tests do
+    run_tests
+  end
+
+  #######################################################
+end
+
+#######################################################
+
+def write_to_file(string, file)
+  # TODO: handle array
+  sh('echo ' + string + ' >> ' + file)
+  # TODO: replace by "set_in_file" that changes a value if the "method" already exists
+end
+
+def run_fastlane(command)
+  Dir.chdir '..' do
+    sh('bundle exec fastlane ' + command)
+  end
+end
