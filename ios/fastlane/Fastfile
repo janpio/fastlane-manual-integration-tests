@@ -11,6 +11,10 @@ platform :ios do
 
     run_produce
     create_app
+
+    config_match
+    run_match
+    certificates
   end
 
   #######################################################
@@ -57,6 +61,24 @@ platform :ios do
   end
 
   #######################################################
+
+  lane :run_match_init do
+    # ???
+  end
+
+  lane :config_match do
+    write_to_file('git_url("'+ ENV['MATCH_REPO'] + '")', 'Matchfile')
+  end
+
+  lane :run_match do
+    run_fastlane('match')
+  end
+
+  lane :certificates do
+    sync_code_signing
+  end
+
+
   #######################################################
 end
 

@@ -22,11 +22,14 @@ fastlane ios create_app (create_app_online)
 
 # certificates
 fastlane match init
+  fastlane ios run_match_init
 fastlane ios config_match
 fastlane match
-    development
-    appstore
-    adhoc
+  fastlane ios run_match
+    #development
+    #appstore
+    #adhoc
+fastlane ios certificates (sync_code_signing )
 
 # build with xcode
 fastlane gym init
