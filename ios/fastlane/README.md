@@ -21,6 +21,11 @@ or alternatively using `brew cask install fastlane`
 fastlane ios all
 ```
 
+### ios create_appfile
+```
+fastlane ios create_appfile
+```
+
 ### ios run_scan_init
 ```
 fastlane ios run_scan_init
@@ -39,6 +44,16 @@ fastlane ios run_scan
 ### ios tests
 ```
 fastlane ios tests
+```
+
+### ios run_produce
+```
+fastlane ios run_produce
+```
+
+### ios create_app
+```
+fastlane ios create_app
 ```
 
 ### ios run_match_init

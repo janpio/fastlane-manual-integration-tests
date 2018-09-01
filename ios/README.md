@@ -15,6 +15,11 @@ fastlane scan
   fastlane ios run_scan
 fastlane ios tests (run_tests)
 
+# Apple Developer Console + App Store Connect
+fastlane produce
+  fastlane ios run_produce
+fastlane ios create_app (create_app_online)
+
 # certificates
 fastlane match init
 fastlane ios config_match
@@ -32,10 +37,6 @@ fastlane gym
 fastlane ios build (build_ios_app)
     debug
     release
-
-# Apple Developer Console + App Store Connect
-fastlane produce
-fastlane ios create_app (create_app_online)
 
 # screenshots
 fastlane snapshot init

@@ -2,10 +2,23 @@ default_platform('ios')
 
 platform :ios do
   lane :all do
+    create_appfile
+
     run_scan_init
     config_scan
     run_scan
     tests
+
+    run_produce
+    create_app
+  end
+
+  #######################################################
+
+  lane :create_appfile do
+    create_file('Appfile')
+    write_to_file('app_identifier("' + ENV['APP_IDENTIFIER'] + '")', 'Appfile')
+    write_to_file('apple_id("' + ENV['APPLE_ID'] + '")', 'Appfile')
   end
 
   #######################################################
@@ -27,9 +40,31 @@ platform :ios do
   end
 
   #######################################################
+
+  # Apple Developer Console + App Store Connect
+  # fastlane produce
+  #   fastlane ios run_produce
+  # fastlane ios create_app (create_app_online)
+
+  lane :run_produce do
+    run_fastlane('produce --app_name="Fastlane iOS ManInteg"')
+  end
+
+  lane :create_app do
+    create_app_online(
+      app_name: "Fastlane iOS ManInteg2"
+    )
+  end
+
+  #######################################################
+  #######################################################
 end
 
 #######################################################
+
+def create_file(file)
+  sh('touch ' + file)
+end
 
 def write_to_file(string, file)
   # TODO: handle array
