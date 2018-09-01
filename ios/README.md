@@ -30,9 +30,11 @@ fastlane match
     #appstore
     #adhoc
 fastlane ios certificates (sync_code_signing )
+# TODO: match nuke
 
 # build with xcode
 fastlane gym init
+  fastlane ios run_gym_init
 fastlane ios config_gym
 fastlane gym
     debug
@@ -43,8 +45,10 @@ fastlane ios build (build_ios_app)
 
 # screenshots
 fastlane snapshot init
+  fastlane ios run_snapshot_init
 fastlane ios config_snapshot
 fastlane snapshot
+  fastlane ios run_snapshot
 fastlane ios screenshots (capture_ios_screenshots)
 fastlane snapshot update
 fastlane snapshot reset_simulators

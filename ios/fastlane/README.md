@@ -76,6 +76,46 @@ fastlane ios run_match
 fastlane ios certificates
 ```
 
+### ios run_gym_init
+```
+fastlane ios run_gym_init
+```
+
+### ios config_gym
+```
+fastlane ios config_gym
+```
+
+### ios run_gym
+```
+fastlane ios run_gym
+```
+
+### ios build
+```
+fastlane ios build
+```
+
+### ios run_snapshot_init
+```
+fastlane ios run_snapshot_init
+```
+
+### ios config_snapshot
+```
+fastlane ios config_snapshot
+```
+
+### ios run_snapshot
+```
+fastlane ios run_snapshot
+```
+
+### ios screenshots
+```
+fastlane ios screenshots
+```
+
 
 ----
 

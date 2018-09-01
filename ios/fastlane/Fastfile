@@ -15,6 +15,18 @@ platform :ios do
     config_match
     run_match
     certificates
+
+    run_gym_init
+    config_gym
+    run_gym
+    build
+
+    run_snapshot_init
+    config_snapshot
+    run_snapshot
+    screenshots
+
+
   end
 
   #######################################################
@@ -63,7 +75,7 @@ platform :ios do
   #######################################################
 
   lane :run_match_init do
-    # ???
+    # ??? TODO
   end
 
   lane :config_match do
@@ -75,9 +87,52 @@ platform :ios do
   end
 
   lane :certificates do
-    sync_code_signing
+    sync_code_signing(
+      #force: true
+    )
   end
 
+  # TODO: match nuke
+
+  #######################################################
+
+  lane :run_gym_init do
+    run_fastlane('gym init')
+  end
+
+  lane :config_gym do
+    write_to_file('project("iosapp/iosapp.xcodeproj")', 'Gymfile')
+  end
+
+  # TODO: Try on Mac - on Windows this is all a dead end of course
+
+  lane :run_gym do
+    run_fastlane('gym')
+  end
+
+  lane :build do
+    build_ios_app
+  end
+
+  #######################################################
+
+  # TODO: Try on Mac - on Windows this is all a dead end of course
+
+  lane :run_snapshot_init do
+    run_fastlane('snapshot init')
+  end
+
+  lane :config_snapshot do
+    write_to_file('???', '???')
+  end
+
+  lane :run_snapshot do
+    run_fastlane('snapshot')
+  end
+
+  lane :screenshots do
+    capture_ios_screenshots
+  end
 
   #######################################################
 end
