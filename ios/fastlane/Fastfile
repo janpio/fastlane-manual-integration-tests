@@ -135,6 +135,25 @@ platform :ios do
   end
 
   #######################################################
+
+  lane :run_frameit_download_frames do
+    run_fastlane('frameit download_frames')
+  end
+
+  lane :run_frameit do
+    run_fastlane('frameit')
+  end
+
+  lane :run_frameit_silver do
+    run_fastlane('frameit silver')
+  end
+
+  lane :frame do
+    frame_screenshots
+  end
+
+  #######################################################
+
 end
 
 #######################################################

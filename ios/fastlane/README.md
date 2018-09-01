@@ -116,6 +116,26 @@ fastlane ios run_snapshot
 fastlane ios screenshots
 ```
 
+### ios run_frameit_download_frames
+```
+fastlane ios run_frameit_download_frames
+```
+
+### ios run_frameit
+```
+fastlane ios run_frameit
+```
+
+### ios run_frameit_silver
+```
+fastlane ios run_frameit_silver
+```
+
+### ios frame
+```
+fastlane ios frame
+```
+
 
 ----
 
