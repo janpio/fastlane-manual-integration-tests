@@ -61,13 +61,18 @@ fastlane ios frame (frame_screenshots)
 
 # App Store Connect
 fastlane deliver init
+  fastlane ios run_deliver_init
 fastlane ios config_deliver
 fastlane ios reset_deliver_data
 fastlane deliver download_screenshots
+  fastlane ios run_deliver_download_screenshots
 fastlane deliver download_metadata
+  fastlane ios run_deliver_download_metadata
 fastlane deliver
+  fastlane ios run_deliver
 fastlane ios upload (upload_to_app_store)
 fastlane deliver submit_build
+  fastlane ios run_deliver_submit_build
 
 # Testflight
 fastlane pilot builds

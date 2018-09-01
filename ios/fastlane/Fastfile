@@ -26,6 +26,21 @@ platform :ios do
     run_snapshot
     screenshots
 
+    run_frameit_download_frames
+    run_frameit
+    run_frameit_silver
+    frame
+
+    run_deliver_init
+    # reset_deliver_data
+    run_deliver_download_screenshots
+    # reset_deliver_data
+    run_deliver_download_metadata
+    # reset_deliver_data
+    run_deliver
+    upload
+    run_deliver_submit_build
+
 
   end
 
@@ -149,11 +164,49 @@ platform :ios do
   end
 
   lane :frame do
-    frame_screenshots
+    frame_screenshots(
+      path: 'pseudoscreenshots'
+    )
   end
 
   #######################################################
 
+  lane :run_deliver_init do
+    run_fastlane('deliver init')
+  end
+
+  lane :config_deliver do
+    # ???
+  end
+
+  lane :reset_deliver_data  do
+    # ???
+  end
+
+  lane :run_deliver_download_screenshots do
+    run_fastlane('deliver download_screenshots')
+  end
+
+  lane :run_deliver_download_metadata do
+    run_fastlane('deliver download_metadata')
+  end
+
+  lane :run_deliver do
+    run_fastlane('deliver --force')
+  end
+
+  lane :upload do
+    upload_to_app_store(
+      force: true,
+      submit_for_review: true
+    )
+  end
+
+  lane :run_deliver_submit_build do
+    run_fastlane('deliver submit_build')
+  end
+
+  #######################################################
 end
 
 #######################################################

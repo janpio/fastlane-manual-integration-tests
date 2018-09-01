@@ -136,6 +136,46 @@ fastlane ios run_frameit_silver
 fastlane ios frame
 ```
 
+### ios run_deliver_init
+```
+fastlane ios run_deliver_init
+```
+
+### ios config_deliver
+```
+fastlane ios config_deliver
+```
+
+### ios reset_deliver_data
+```
+fastlane ios reset_deliver_data
+```
+
+### ios run_deliver_download_screenshots
+```
+fastlane ios run_deliver_download_screenshots
+```
+
+### ios run_deliver_download_metadata
+```
+fastlane ios run_deliver_download_metadata
+```
+
+### ios run_deliver
+```
+fastlane ios run_deliver
+```
+
+### ios upload
+```
+fastlane ios upload
+```
+
+### ios run_deliver_submit_build
+```
+fastlane ios run_deliver_submit_build
+```
+
 
 ----
 
