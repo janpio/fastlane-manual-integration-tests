@@ -75,16 +75,33 @@ fastlane deliver submit_build
   fastlane ios run_deliver_submit_build
 
 # Testflight
-fastlane pilot builds
-fastlane pilot add x
-fastlane pilot find x
-fastlane pilot list
-fastlane pilot export
-fastlane pilot import
-fastlane pilot remove x
 fastlane pilot upload
+  fastlane ios run_pilot_upload
 fastlane ios testflight (upload_to_testflight)
+
+fastlane pilot builds
+  fastlane ios run_pilot_builds
+fastlane pilot list
+  fastlane ios run_pilot_list
+fastlane pilot add x
+  fastlane ios run_pilot_add
+fastlane pilot list
+  fastlane ios run_pilot_list
+fastlane pilot import
+  fastlane ios run_pilot_import
+fastlane pilot list
+  fastlane ios run_pilot_list
+fastlane pilot find x
+  fastlane ios run_pilot_find
+fastlane pilot export
+  fastlane ios run_pilot_export
+fastlane pilot remove x
+  fastlane ios run_pilot_remove
+fastlane pilot list
+  fastlane ios run_pilot_list
+
 fastlane pilot distribute
+  fastlane ios run_pilot_distribute
 ```
 
 ## Actions to integrate
