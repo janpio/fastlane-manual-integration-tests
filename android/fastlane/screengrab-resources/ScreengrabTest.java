@@ -1,4 +1,4 @@
-package tools.fastlane.androidapp;
+package tools.fastlane.managed_play;
 
 
 import android.support.test.espresso.ViewInteraction;

@@ -1,4 +1,9 @@
 PATH
+  remote: ../../fastlane-plugin-managed_google_play
+  specs:
+    fastlane-plugin-managed_google_play (0.1.0)
+
+PATH
   remote: C:/Projects/Fastlane/win-fastlane
   specs:
     fastlane (2.102.0)
@@ -251,6 +256,7 @@ DEPENDENCIES
   coveralls (~> 0.8.13)
   fakefs (~> 0.8.1)
   fastlane!
+  fastlane-plugin-managed_google_play!
   pry
   pry-byebug
   pry-rescue

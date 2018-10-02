@@ -7,6 +7,11 @@ A list of fastlane CLI commands and hypothetical lanes (with the actions they ex
 ```
 fastlane android create_appfile
 
+# Google Play Console
+# manually create app online
+fastlane supply init
+  fastlane android run_supply_init
+
 # screenshots
 fastlane screengrab init
   fastlane android run_screengrab_init
@@ -23,8 +28,6 @@ fastlane android build_release                (gradle + build_android_app)
 # manually create app here
 
 # Google Play Console
-fastlane supply init
-  fastlane android run_supply_init
 fastlane android prepare_metadata
 fastlane supply
   fastlane android run_supply
