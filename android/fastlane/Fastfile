@@ -94,7 +94,6 @@ platform :android do
     # new_lines = old_line + "\n..."
     # replace_string_in_file('androidapp/app/build.gradle', old_line, new_lines)
 
-
     # copy src/debug/AndroidManifest.xml
     source = 'screengrab-resources/AndroidManifest.xml'
     target = '../' + @project + '/app/src/debug'
