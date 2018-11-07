@@ -37,6 +37,8 @@ platform :android do
     prepare_metadata
     run_supply
     upload
+
+    cleanup
   end
 
   #######################################################
@@ -194,6 +196,13 @@ platform :android do
       track: 'alpha',
       apk: 'artifacts/app-release.apk'
     )
+  end
+
+  #######################################################
+
+  lane :cleanup do
+    File.delete('Appfile')
+    File.delete('Screengrabfile')
   end
 
   #######################################################
