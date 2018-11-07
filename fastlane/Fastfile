@@ -1,3 +1,0 @@
-desc "Experiment"
-lane :experiment do |options|
-end

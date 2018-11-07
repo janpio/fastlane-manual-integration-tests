@@ -1,10 +1,12 @@
 # fastlane-manual-integration-tests
 
-This project contains mobile app projects configured with [fastlane](https://fastlane.tools) integration that can be used to manually test all fastlane functionality. Its goal is to complement fastlane's automated test suite that is run on each commit - as some of the more interactive or connected steps just aren't and can't effectively be tested there.
+This repository contains multiple mobile app projects configured with [_fastlane_](https://fastlane.tools) integration. They can be used to manually test a good part of all fastlane functionality.
 
-The steps necessary to executes these manual tests are documented in the projects.
+Its goal is to complement fastlane's automated test suite that is run on each commit, merge and release - as some of the more interactive or connected steps just can't and this aren't effectively tested by automated tests.
 
 ## Projects
+
+See the individual projects for further instructions:
 
 - [iOS](ios/)
 - [Android](android/)
