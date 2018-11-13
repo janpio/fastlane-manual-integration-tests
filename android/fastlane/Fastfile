@@ -1,7 +1,8 @@
 default_platform('android')
 
 before_all do |lane, options|
-  # TODO check if required env vars are set, not if an environment is provided (so this will also work if someone actually sets the environmen variables in the environment)
+  # TODO check if required env vars are set, not if an environment is provided
+  # (so this will also work if someone actually sets the environment variables in the environment)
   unless lane_context[SharedValues::ENVIRONMENT]
     UI.error("This `Fastfile` uses environments. Please supply an available environment via `--env <name>`")
     raise('foo')
@@ -77,7 +78,8 @@ platform :android do
 
   lane :config_screengrab do
     # Add empty line to file so later additions don't "hug" the template too much
-    # write_to_file('', 'Screengrabfile') # TODO: On Windows this writes "ECHO is on." :/
+    # write_to_file('', 'Screengrabfile')
+    # TODO: Commented out because on Windows this writes "ECHO is on." to the file :/
   end
 
   lane :add_to_project_and_build_and_run_screengrab do
@@ -89,7 +91,7 @@ platform :android do
   lane :add_screengrab_to_project do
     package_name = CredentialsManager::AppfileConfig.try_fetch_value(:package_name)
 
-    # TODO: build.gradle
+    # TODO: add screengrab dependencies to build.gradle
     # modify build.gradle
     # old_line = '...'
     # new_lines = old_line + "\n..."
@@ -133,12 +135,12 @@ platform :android do
       build_type: 'AndroidTest',
       project_dir: @project
     )
-    apk = Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+    test_apk = Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
     copy_artifacts(
       fail_on_missing: false,
-      artifacts: apk
+      artifacts: test_apk
     )
-    write_to_file('tests_apk_path("artifacts/' + File.basename(apk) + '")', 'Screengrabfile')
+    write_to_file('tests_apk_path("artifacts/' + File.basename(test_apk) + '")', 'Screengrabfile')
   end
 
   lane :run_screengrab do
@@ -162,11 +164,10 @@ platform :android do
       build_type: 'Release',
       project_dir: @project,
       properties: {
-        'android.injected.signing.store.file' => 'keystore.jks', # TODO
+        'android.injected.signing.store.file' => ENV['KEYSTORE_FILE'],
         'android.injected.signing.store.password' => ENV['KEYSTORE_PASSWORD'],
         'android.injected.signing.key.alias' => ENV['KEYSTORE_ALIAS'],
-        'android.injected.signing.key.password' => ENV['KEYSTORE_PASSWORD'],
-        # TODO: wtf wieso an so vielen Stellen das file nötig?
+        'android.injected.signing.key.password' => ENV['KEYSTORE_PASSWORD']
       }
     )
     apk = Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
