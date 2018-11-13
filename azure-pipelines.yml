@@ -19,7 +19,7 @@ steps:
     bundle exec fastlane -v
   displayName: 'bundle exec fastlane -v'
 
-  - script: |
+- script: |
     cd android
     bundle exec fastlane environment --env=example
   displayName: 'bundle exec fastlane environment'
