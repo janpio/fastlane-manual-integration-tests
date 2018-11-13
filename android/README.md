@@ -1,35 +1,29 @@
 # Android
 
-## Steps
+This folder contains an Android mobile app project to be used in integration testing of fastlane actions and commands that can be applied on this project.
 
-A list of fastlane CLI commands and hypothetical lanes (with the actions they execute) that can be used to test:
+The `Fastfile` covers the following "areas" for an Android app:
+
+* Build the App
+* Create App screenshots
+* Upload to Play Store
+
+It runs and tests the following fastlane actions and commands (`fastlane ...`) in its `all` lane (executed via `fastlane android all`):
 
 ```
-fastlane android create_appfile
-
-# Google Play Console
-# manually create app online
+gradle
+build_android_app
+copy_artifacts
 fastlane supply init
-  fastlane android run_supply_init
-
-# screenshots
 fastlane screengrab init
-  fastlane android run_screengrab_init
-fastlane android config_screengrab
-fastlane android add_screengrab_to_project
-fastlane android build_for_screenshots        (build_android_app) # build
+gradle
+build_android_app
+copy_artifacts
 fastlane screengrab
-  fastlane android run_screengrab
-fastlane android screenshots                  (capture_android_screenshots)
-
-# build
-fastlane android build_release                (gradle + build_android_app)
-
-# manually create app here
-
-# Google Play Console
-fastlane android prepare_metadata
+capture_android_screenshots
+gradle
+build_android_app
+copy_artifacts
 fastlane supply
-  fastlane android run_supply
-fastlane android upload                       (upload_to_play_store)
+upload_to_play_store
 ```
