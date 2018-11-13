@@ -1,3 +1,5 @@
+# config
+
 pool:
   vmImage: 'Ubuntu 16.04'
 
@@ -5,6 +7,8 @@ steps:
 - task: UseRubyVersion@0
   inputs:
     versionSpec: '>= 2.5'
+
+# preparation
 
 - script: gem install bundler
   displayName: 'install bundler'
@@ -18,6 +22,22 @@ steps:
     cd android
     bundle exec fastlane -v
   displayName: 'bundle exec fastlane -v'
+
+# secure files
+
+- task: DownloadSecureFile@1
+  inputs:
+    secureFile: google_play_key.json
+
+- task: DownloadSecureFile@1
+  inputs:
+    secureFile: zaehlerstand.keystore
+
+- script: |
+    echo "##vso[task.setvariable variable=JSON_KEY_FILE]$env:DOWNLOADSECUREFILE1_SECUREFILEPATH"
+    echo "##vso[task.setvariable variable=KEYSTORE_FILE]$env:DOWNLOADSECUREFILE2_SECUREFILEPATH"
+
+# lanes
 
 - script: |
     cd android
