@@ -9,10 +9,8 @@ steps:
 - script: gem install bundler
   displayName: 'install bundler'
 
-- script: cd android
-
-- script: bundle install --retry=3 --jobs=4
+- script: cd android && bundle install --retry=3 --jobs=4
   displayName: 'bundle install'
 
-- script: bundle exec fastlane -v
+- script: cd android && bundle exec fastlane -v
   displayName: 'bundle exec fastlane -v'
