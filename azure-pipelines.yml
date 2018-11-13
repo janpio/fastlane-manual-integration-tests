@@ -26,5 +26,5 @@ steps:
 
 - script: |
     cd android
-    bundle exec fastlane all --env=example
+    bundle exec fastlane all
   displayName: 'bundle exec fastlane all'
