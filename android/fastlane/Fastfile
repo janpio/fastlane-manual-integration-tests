@@ -210,40 +210,4 @@ end
 
 #######################################################
 
-def create_file(file)
-  sh('touch ' + file)
-end
-
-def write_to_file(string, file)
-  # TODO: handle array
-  sh('echo ' + string + ' >> ' + file)
-  # TODO: replace by "set_in_file" that changes a value if the "method" already exists
-end
-
-def run_fastlane(command)
-  Dir.chdir '..' do
-    sh('bundle exec fastlane ' + command)
-  end
-end
-
-def get_relative_path(absolute_path)
-  Dir.chdir '..' do
-    first = Pathname.new(absolute_path)
-    second = Pathname.new(Dir.pwd)
-
-    relative = first.relative_path_from second
-    relative.to_s
-  end
-end
-
-def self.replace_string_in_file(file, string, replacement)
-  data = File.read(file)
-  filtered_data = data.gsub(string, replacement)
-  File.open(file, 'w') do |f|
-    f.write(filtered_data)
-  end
-end
-
-def ensure_folder_exists(folder)
-  Dir.exist?(folder) || FileUtils.mkdir_p(folder)
-end
+import("../../Fastfile_common_methods")
