@@ -23,6 +23,10 @@ steps:
     bundle exec fastlane -v
   displayName: 'bundle exec fastlane -v'
 
+- script: |
+    echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-27;google_apis;x86'
+  displayName: 'install android tools'
+
 # secure files
 
 - task: DownloadSecureFile@1
@@ -36,6 +40,7 @@ steps:
 - script: |
     echo %DOWNLOADSECUREFILE1_SECUREFILEPATH%
     echo %DOWNLOADSECUREFILE2_SECUREFILEPATH%
+    # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=vsts&tabs=yaml%2Cbatch#set-in-script
     echo ##vso[task.setvariable variable=JSON_KEY_FILE]%DOWNLOADSECUREFILE1_SECUREFILEPATH%
     echo ##vso[task.setvariable variable=KEYSTORE_FILE]%DOWNLOADSECUREFILE2_SECUREFILEPATH%
   displayName: 'copy secure file filenames to environment variables'
