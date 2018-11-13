@@ -1,6 +1,7 @@
 default_platform('android')
 
 before_all do |lane, options|
+  # TODO check if required env vars are set, not if an environment is provided (so this will also work if someone actually sets the environmen variables in the environment)
   unless lane_context[SharedValues::ENVIRONMENT]
     UI.error("This `Fastfile` uses environments. Please supply an available environment via `--env <name>`")
     raise('foo')
@@ -8,8 +9,6 @@ before_all do |lane, options|
 
   @project = ENV['PROJECT']
 end
-
-
 
 lane :environment do
   UI.message(lane_context[SharedValues::ENVIRONMENT])
@@ -23,6 +22,8 @@ platform :android do
     create_appfile
 
     build_release # something to upload in next step
+    # create app manually
+    # TODO If Managed Play account, create app here with `create_app_on_managed_play_store`
     run_supply_init
 
     run_screengrab_init
@@ -99,18 +100,14 @@ platform :android do
     target = '../' + @project + '/app/src/debug'
     ensure_folder_exists(target)
     FileUtils.cp(source, target)
-    # copy_artifacts(artifacts: source, target_path: target)
     replace_string_in_file(target + '/AndroidManifest.xml', 'package_name', package_name)
 
     # copy test file
-    package_name_path = package_name.tr('.', '/')
-    target = '../' + @project + "/app/src/androidTest/java/#{package_name_path}"
+    source = 'screengrab-resources/ScreengrabTest.java'
+    target = '../' + @project + "/app/src/androidTest/java/#{package_name.tr('.', '/')}"
     ensure_folder_exists(target)
-    FileUtils.cp('screengrab-resources/ScreengrabTest.java', target)
-    # copy_artifacts(artifacts: source, target_path: target)
+    FileUtils.cp(source, target)
     replace_string_in_file(target + '/ScreengrabTest.java', 'package_name', package_name)
-
-    puts 'foo'
   end
 
   lane :build_for_screenshots do
@@ -165,7 +162,7 @@ platform :android do
       build_type: 'Release',
       project_dir: @project,
       properties: {
-        'android.injected.signing.store.file' => 'keystore.jks',
+        'android.injected.signing.store.file' => 'keystore.jks', # TODO
         'android.injected.signing.store.password' => ENV['KEYSTORE_PASSWORD'],
         'android.injected.signing.key.alias' => ENV['KEYSTORE_ALIAS'],
         'android.injected.signing.key.password' => ENV['KEYSTORE_PASSWORD'],
