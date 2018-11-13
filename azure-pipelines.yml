@@ -34,8 +34,11 @@ steps:
     secureFile: zaehlerstand.keystore
 
 - script: |
-    echo "##vso[task.setvariable variable=JSON_KEY_FILE]$env:DOWNLOADSECUREFILE1_SECUREFILEPATH"
-    echo "##vso[task.setvariable variable=KEYSTORE_FILE]$env:DOWNLOADSECUREFILE2_SECUREFILEPATH"
+    echo $DOWNLOADSECUREFILE1_SECUREFILEPATH
+    echo $DOWNLOADSECUREFILE2_SECUREFILEPATH
+    echo "##vso[task.setvariable variable=JSON_KEY_FILE]$DOWNLOADSECUREFILE1_SECUREFILEPATH"
+    echo "##vso[task.setvariable variable=KEYSTORE_FILE]$DOWNLOADSECUREFILE2_SECUREFILEPATH"
+  displayName: 'copy secure file filenames to environment variables'
 
 # lanes
 
