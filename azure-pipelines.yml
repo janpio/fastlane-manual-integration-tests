@@ -21,7 +21,7 @@ steps:
 
 - script: |
     cd android
-    bundle exec fastlane environment --env=example
+    bundle exec fastlane environment
   displayName: 'bundle exec fastlane environment'
 
 - script: |
