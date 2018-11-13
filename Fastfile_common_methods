@@ -4,7 +4,7 @@ end
 
 def write_to_file(string, file)
   # TODO: handle array
-  sh('echo ' + string + ' >> ' + file)
+  sh('echo ' + string.shellescape + ' >> ' + file)
   # TODO: replace by "set_in_file" that changes a value if the "method" already exists
 end
 
