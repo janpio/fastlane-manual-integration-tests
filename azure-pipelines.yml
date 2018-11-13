@@ -6,9 +6,12 @@ steps:
   inputs:
     versionSpec: '>= 2.5'
 
-- script: |
-    gem install bundler
-    bundle install --retry=3 --jobs=4
+- script: gem install bundler
+  displayName: 'install bundler'
+
+- script: cd android
+
+- script: bundle install --retry=3 --jobs=4
   displayName: 'bundle install'
 
 - script: bundle exec fastlane -v
