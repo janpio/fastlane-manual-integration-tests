@@ -70,7 +70,7 @@ platform :android do
   # Done, now the app is connected to the package_name
 
   lane :run_supply_init do
-    run_fastlane('supply init --package_name=' + ENV['PACKAGE_NAME'] + ' --json-key=' + ENV['JSON_KEY_FILE'].shellescape + '')
+    run_fastlane('supply init --package_name ' + ENV['PACKAGE_NAME'] + ' --json-key ' + ENV['JSON_KEY_FILE'].shellescape + '')
   end
 
   #######################################################
