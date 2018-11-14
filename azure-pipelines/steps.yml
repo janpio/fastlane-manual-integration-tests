@@ -11,6 +11,7 @@ steps:
 
 - script: gem install bundler
   displayName: 'install bundler'
+  condition: not(eq(variables['Agent.OS'], 'Darwin'))
 
 - script: |
     cd android
@@ -32,8 +33,8 @@ steps:
 
 - bash: |
     echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-27;google_apis;x86'
-  condition: or(eq(variables['Agent.OS'], 'Linux'), eq(variables['Agent.OS'], 'Darwin'))
-  displayName: 'install android tools (Linux / Mac)'
+  condition: eq(variables['Agent.OS'], 'Darwin')
+  displayName: 'install android tools (/ Mac)'
 
 # secure files
 
