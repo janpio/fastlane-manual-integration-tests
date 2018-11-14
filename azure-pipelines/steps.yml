@@ -1,0 +1,57 @@
+steps:
+
+# config
+
+- task: UseRubyVersion@0
+  inputs:
+    versionSpec: '>= 2.5'
+
+# preparation
+
+- script: gem install bundler
+  displayName: 'install bundler'
+
+- script: |
+    cd android
+    bundle install --retry=3 --jobs=4
+  displayName: 'bundle install'
+
+- script: |
+    cd android
+    bundle exec fastlane -v
+  displayName: 'bundle exec fastlane -v'
+
+- script: |
+    xcopy "%ANDROID_HOME%/tools" "%ANDROID_HOME%/tools.old" /e /i /h
+    echo "y" | "%ANDROID_HOME%/tools.old/bin/sdkmanager" "system-images;android-27;google_apis;x86"
+  displayName: 'install android tools'
+
+# secure files
+
+- task: DownloadSecureFile@1
+  inputs:
+    secureFile: google_play_key.json
+
+- task: DownloadSecureFile@1
+  inputs:
+    secureFile: zaehlerstand.keystore
+
+- script: |
+    echo %DOWNLOADSECUREFILE1_SECUREFILEPATH%
+    echo %DOWNLOADSECUREFILE2_SECUREFILEPATH%
+    REM https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=vsts&tabs=yaml%2Cbatch#set-in-script
+    echo ##vso[task.setvariable variable=JSON_KEY_FILE]%DOWNLOADSECUREFILE1_SECUREFILEPATH%
+    echo ##vso[task.setvariable variable=KEYSTORE_FILE]%DOWNLOADSECUREFILE2_SECUREFILEPATH%
+  displayName: 'copy secure file filenames to environment variables'
+
+# lanes
+
+- script: |
+    cd android
+    bundle exec fastlane environment
+  displayName: 'bundle exec fastlane environment'
+
+- script: |
+    cd android
+    bundle exec fastlane all
+  displayName: 'bundle exec fastlane all'
