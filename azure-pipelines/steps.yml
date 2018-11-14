@@ -64,6 +64,14 @@ steps:
   condition: or(eq(variables['Agent.OS'], 'Linux'), eq(variables['Agent.OS'], 'Darwin'))
   displayName: 'copy secure file filenames to environment variables (Linux / Mac)'
 
+# make gradlew executable
+
+- bash: |
+    cd android/androidapp
+    chmod +x gradlew
+  condition: or(eq(variables['Agent.OS'], 'Linux'), eq(variables['Agent.OS'], 'Darwin'))
+  displayName: 'make gradlew executable (Linux / Mac)'
+
 # lanes
 
 - script: |
