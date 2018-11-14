@@ -36,6 +36,14 @@ steps:
   condition: eq(variables['Agent.OS'], 'Darwin')
   displayName: 'install android tools (Mac)'
 
+## empty abd and aapt files for Windows
+- script: |
+    cd %ANDROID_HOME%/platform-tools
+    copy NUL abd
+    copy NUL aapt
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
+  displayName: 'install android tools (Windows)'
+
 ## ANDROID_HOME for Ubuntu
 
 - script: |
