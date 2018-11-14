@@ -5,6 +5,7 @@ steps:
 - task: UseRubyVersion@0
   inputs:
     versionSpec: '>= 2.5'
+  condition: not(eq(variables.Agent.OS, 'Darwin'))
 
 # preparation
 
