@@ -37,9 +37,9 @@ steps:
 ### Android Tools
 
 - script: |
-    # https://stackoverflow.com/questions/43796568/cant-update-tools-android-sdk-command-line-tools-for-windows
-    # / https://issuetracker.google.com/issues/38094997
-    # https://stackoverflow.com/a/19517873/252627
+    REM https://stackoverflow.com/questions/43796568/cant-update-tools-android-sdk-command-line-tools-for-windows
+    REM / https://issuetracker.google.com/issues/38094997
+    REM https://stackoverflow.com/a/19517873/252627
     xcopy "%ANDROID_HOME%/tools" "%ANDROID_HOME%/tools.old" /e /i /h
     echo "y" | "%ANDROID_HOME%/tools.old/bin/sdkmanager" "system-images;android-27;google_apis;x86"
   condition: eq(variables['Agent.OS'], 'Windows_NT')
