@@ -36,14 +36,23 @@ steps:
   condition: eq(variables['Agent.OS'], 'Darwin')
   displayName: 'install android tools (Mac)'
 
-## create empty adb file for Windows
+### Android Emulator
+
+- script: |
+    $ANDROID_HOME/platform-tools/adb devices
+    echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n test_android_emulator -k 'system-images;android-27;google_apis;x86' --force
+    nohup $ANDROID_HOME/emulator/emulator -avd test_android_emulator -no-snapshot > /dev/null 2>&1 & $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
+    echo "Emulator started"
+  displayName: 'install and start android emulator'
+
+### create empty adb file for Windows
 - script: |
     cd %ANDROID_HOME%/platform-tools
     copy NUL adb
   condition: eq(variables['Agent.OS'], 'Windows_NT')
   displayName: 'install android tools (Windows)'
 
-## ANDROID_HOME for Ubuntu
+### ANDROID_HOME for Ubuntu
 
 - script: |
     echo $ANDROID_SDK_ROOT
