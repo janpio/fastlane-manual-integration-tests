@@ -21,10 +21,18 @@ steps:
     bundle exec fastlane -v
   displayName: 'bundle exec fastlane -v'
 
+## Android Tools
+
 - script: |
     xcopy "%ANDROID_HOME%/tools" "%ANDROID_HOME%/tools.old" /e /i /h
     echo "y" | "%ANDROID_HOME%/tools.old/bin/sdkmanager" "system-images;android-27;google_apis;x86"
-  displayName: 'install android tools'
+  condition: eq(variables.Agent.OS, 'Windows_NT')
+  displayName: 'install android tools (Windows)'
+
+- bash: |
+    echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-27;google_apis;x86'
+  condition: and(eq(variables.Agent.OS, 'Linux'), eq(variables.Agent.OS, 'Darwin'))
+  displayName: 'install android tools (Linux / Mac)'
 
 # secure files
 
