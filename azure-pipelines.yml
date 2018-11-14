@@ -24,7 +24,8 @@ steps:
   displayName: 'bundle exec fastlane -v'
 
 - script: |
-    echo "y" | "%ANDROID_HOME%/tools/bin/sdkmanager" "system-images;android-27;google_apis;x86"
+    rename "%ANDROID_HOME%/tools" "%ANDROID_HOME%/tools.old"
+    echo "y" | "%ANDROID_HOME%/tools.old/bin/sdkmanager" "system-images;android-27;google_apis;x86"
   displayName: 'install android tools'
 
 # secure files
