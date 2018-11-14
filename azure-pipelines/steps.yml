@@ -53,23 +53,35 @@ steps:
 ### Android Emulator
 
 - script: |
-    $ANDROID_HOME/platform-tools/adb devices
+    $ANDROID_HOME/emulator/emulator -list-avds
     echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n test_android_emulator -k 'system-images;android-27;google_apis;x86' --force
+    $ANDROID_HOME/emulator/emulator -list-avds
+  condition: or(eq(variables['Agent.OS'], 'Darwin'), eq(variables['Agent.OS'], 'Linux'))
+  displayName: 'install android emulator (Mac/Linux)'
+
+- script: |
+    $ANDROID_HOME/platform-tools/adb devices
     nohup $ANDROID_HOME/emulator/emulator -avd test_android_emulator -no-snapshot > /dev/null 2>&1 & $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
     $ANDROID_HOME/platform-tools/adb devices
     echo "Emulator started"
   condition: or(eq(variables['Agent.OS'], 'Darwin'), eq(variables['Agent.OS'], 'Linux'))
-  displayName: 'install and start android emulator (Mac/Linux)'
+  displayName: 'start android emulator (Mac/Linux)'
+
+- script: |
+    "%ANDROID_HOME%/emulator/emulator" -list-avds
+    echo "n" | "%ANDROID_HOME%/tools/bin/avdmanager" create avd -n test_android_emulator -k "system-images;android-27;google_apis;x86" --force
+    "%ANDROID_HOME%/emulator/emulator" -list-avds
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
+  displayName: 'install android emulator (Windows)'
 
 - script: |
     "%ANDROID_HOME%/platform-tools/adb" devices
-    echo "n" | "%ANDROID_HOME%/tools/bin/avdmanager" create avd -n test_android_emulator -k "system-images;android-27;google_apis;x86" --force
     "%ANDROID_HOME%/emulator/emulator" -avd test_android_emulator -no-snapshot
     "%ANDROID_HOME%/platform-tools/adb" wait-for-device shell "while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82"
     "%ANDROID_HOME%/platform-tools/adb" devices
     echo "Emulator started"
   condition: eq(variables['Agent.OS'], 'Windows_NT')
-  displayName: 'install and start android emulator (Windows)'
+  displayName: 'start android emulator (Windows)'
 
 ### create empty adb file for Windows
 # workaround for https://github.com/fastlane/fastlane/issues/13681
