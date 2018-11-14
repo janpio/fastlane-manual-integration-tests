@@ -79,7 +79,7 @@ steps:
     copy NUL adb
     dir
   condition: eq(variables['Agent.OS'], 'Windows_NT')
-  displayName: 'install android tools (Windows)'
+  displayName: 'fastlane workaround: create empty adb file (Windows)'
 
 ## secure files
 
