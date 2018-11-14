@@ -34,7 +34,7 @@ steps:
 - bash: |
     echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-27;google_apis;x86'
   condition: eq(variables['Agent.OS'], 'Darwin')
-  displayName: 'install android tools (/ Mac)'
+  displayName: 'install android tools (Mac)'
 
 # secure files
 
@@ -52,7 +52,17 @@ steps:
     REM https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=vsts&tabs=yaml%2Cbatch#set-in-script
     echo ##vso[task.setvariable variable=JSON_KEY_FILE]%DOWNLOADSECUREFILE1_SECUREFILEPATH%
     echo ##vso[task.setvariable variable=KEYSTORE_FILE]%DOWNLOADSECUREFILE2_SECUREFILEPATH%
-  displayName: 'copy secure file filenames to environment variables'
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
+  displayName: 'copy secure file filenames to environment variables (Windows)'
+
+- script: |
+    echo $DOWNLOADSECUREFILE1_SECUREFILEPATH
+    echo $DOWNLOADSECUREFILE2_SECUREFILEPATH
+    # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=vsts&tabs=yaml%2Cbatch#set-in-script
+    echo ##vso[task.setvariable variable=JSON_KEY_FILE]$DOWNLOADSECUREFILE1_SECUREFILEPATH
+    echo ##vso[task.setvariable variable=KEYSTORE_FILE]$DOWNLOADSECUREFILE2_SECUREFILEPATH
+  condition: or(eq(variables['Agent.OS'], 'Linux'), eq(variables['Agent.OS'], 'Darwin'))
+  displayName: 'copy secure file filenames to environment variables (Linux / Mac)'
 
 # lanes
 
