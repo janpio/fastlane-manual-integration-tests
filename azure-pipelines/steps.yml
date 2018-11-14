@@ -23,34 +23,7 @@ steps:
     bundle exec fastlane -v
   displayName: 'bundle exec fastlane -v'
 
-## Android Tools
-
-- script: |
-    xcopy "%ANDROID_HOME%/tools" "%ANDROID_HOME%/tools.old" /e /i /h
-    echo "y" | "%ANDROID_HOME%/tools.old/bin/sdkmanager" "system-images;android-27;google_apis;x86"
-  condition: eq(variables['Agent.OS'], 'Windows_NT')
-  displayName: 'install android tools (Windows)'
-
-- bash: |
-    echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-27;google_apis;x86'
-  condition: eq(variables['Agent.OS'], 'Darwin')
-  displayName: 'install android tools (Mac)'
-
-### Android Emulator
-
-- script: |
-    $ANDROID_HOME/platform-tools/adb devices
-    echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n test_android_emulator -k 'system-images;android-27;google_apis;x86' --force
-    nohup $ANDROID_HOME/emulator/emulator -avd test_android_emulator -no-snapshot > /dev/null 2>&1 & $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
-    echo "Emulator started"
-  displayName: 'install and start android emulator'
-
-### create empty adb file for Windows
-- script: |
-    cd %ANDROID_HOME%/platform-tools
-    copy NUL adb
-  condition: eq(variables['Agent.OS'], 'Windows_NT')
-  displayName: 'install android tools (Windows)'
+## Android
 
 ### ANDROID_HOME for Ubuntu
 
@@ -60,6 +33,36 @@ steps:
     echo "##vso[task.setvariable variable=ANDROID_HOME]$ANDROID_SDK_ROOT"
   condition: eq(variables['Agent.OS'], 'Linux')
   displayName: 'set ANDROID_HOME (Linux)'
+
+### Android Tools
+
+- script: |
+    xcopy "%ANDROID_HOME%/tools" "%ANDROID_HOME%/tools.old" /e /i /h
+    echo "y" | "%ANDROID_HOME%/tools.old/bin/sdkmanager" "system-images;android-27;google_apis;x86"
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
+  displayName: 'install android tools (Windows)'
+
+- bash: |
+    echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-27;google_apis;x86'
+  condition: or(eq(variables['Agent.OS'], 'Darwin'), eq(variables['Agent.OS'], 'Linux'))
+  displayName: 'install android tools (Mac/Linux)'
+
+### Android Emulator
+
+- script: |
+    $ANDROID_HOME/platform-tools/adb devices
+    echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n test_android_emulator -k 'system-images;android-27;google_apis;x86' --force
+    nohup $ANDROID_HOME/emulator/emulator -avd test_android_emulator -no-snapshot > /dev/null 2>&1 & $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
+    echo "Emulator started"
+  condition: or(eq(variables['Agent.OS'], 'Darwin'), eq(variables['Agent.OS'], 'Linux'))
+  displayName: 'install and start android emulator (Mac/Linux)'
+
+### create empty adb file for Windows
+- script: |
+    cd %ANDROID_HOME%/platform-tools
+    copy NUL adb
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
+  displayName: 'install android tools (Windows)'
 
 # secure files
 
