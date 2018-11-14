@@ -35,6 +35,12 @@ steps:
     ls $ANDROID_SDK_ROOT
     echo '---'
     ls $ANDROID_ROOT
+    echo '---'
+    ls $ANDROID_SDK_ROOT/..
+    echo '---'
+    cd $ANDROID_SDK_ROOT
+    cd ..
+    ls
   condition: eq(variables['Agent.OS'], 'Linux')
   displayName: 'set ANDROID_HOME (Linux)'
 
