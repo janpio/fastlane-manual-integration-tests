@@ -34,7 +34,7 @@ platform :android do
     config_screengrab
     add_screengrab_to_project
     build_for_screenshots
-    if android_emulator_running?
+    if android_device_connected?
       run_screengrab
       screenshots
     elsif
@@ -217,6 +217,6 @@ end
 
 import("../../Fastfile_common_methods")
 
-def android_emulator_running?
+def android_device_connected?
   adb_devices.count > 0
 end
