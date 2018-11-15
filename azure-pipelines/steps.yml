@@ -63,27 +63,30 @@ steps:
 ### Fastlane workaround: create empty adb file for Windows
 # https://github.com/fastlane/fastlane/issues/13681
 - script: |
+    c:
     cd "%ANDROID_HOME%"
     dir
-    echo '---'
+    echo '---1'
     cd "$ANDROID_HOME"
     dir
-    echo '---'
+    echo '---2'
     cd "platform-tools"
-    echo '---'
+    echo '---3'
     dir
-    echo '---'
+    echo '---4'
     touch adb
     dir
-    echo '---'
+    echo '---5'
     copy NUL adb
     dir
-    echo '---'
+    echo '---6'
     echo foo > adb
     dir
-    echo '---'
+    echo '---7'
+    xcopy adb "%ANDROID_HOME%/platform-tools" /e /i /h
+    echo '---8'
     dir "%ANDROID_HOME%/platform-tools"
-    echo '---'
+    echo '---9'
     touch "%ANDROID_HOME%/platform-tools/adb"
     dir "%ANDROID_HOME%/platform-tools"
   condition: eq(variables['Agent.OS'], 'Windows_NT')
