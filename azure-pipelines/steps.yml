@@ -152,25 +152,31 @@ steps:
 
 - script: |
     $ANDROID_HOME/platform-tools/adb devices
-    echo '---'
+    echo '---1---'
     $ANDROID_SDK_ROOT/../tools/emulator -list-avds
-    echo '---'
+    echo '---2---'
     ls -l ~/.android/avd
-    echo '---'
+    echo '---3---'
     cat ~/.android/avd/test_android_emulator.ini
-    echo '---'
+    echo '---4---'
     ls -l ~/.android/avd/test_android_emulator.avd
-    echo '---'
+    echo '---5---'
     echo 'whoami = '
     whoami
     echo 'group = '
     id -g -n
-    echo '---'
+    echo '---6---'
     ls -l $ANDROID_SDK_ROOT
-    echo '---'
+    echo '---7---'
     ls -l $ANDROID_SDK_ROOT/..
-    echo '---'
+    echo '---8---'
+    $ANDROID_SDK_ROOT/emulator/emulator -list-avds
+    echo '---9---'
     sudo $ANDROID_SDK_ROOT/emulator/emulator -avd test_android_emulator -no-snapshot --sdk_root=$ANDROID_SDK_ROOT
+    echo '---10---'
+    $ANDROID_SDK_ROOT/emulator/emulator -avd test_android_emulator -no-snapshot --sdk_root=$ANDROID_SDK_ROOT
+    echo '---11---'
+    $ANDROID_SDK_ROOT/emulator/emulator -avd test_android_emulator -no-snapshot
   condition: eq(variables['Agent.OS'], 'Linux')
   displayName: 'start Android emulator 1 (Linux)'
 
