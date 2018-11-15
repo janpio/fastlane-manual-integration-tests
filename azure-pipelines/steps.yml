@@ -89,7 +89,7 @@ steps:
   displayName: 'install Android image (Windows)'
 
 - bash: |
-    sudo echo "y" | $ANDROID_SDK_ROOT/../tools/bin/sdkmanager --install 'system-images;android-27;google_apis;x86' --sdk_root=$ANDROID_SDK_ROOT
+    echo "y" | sudo $ANDROID_SDK_ROOT/../tools/bin/sdkmanager --install 'system-images;android-27;google_apis;x86' --sdk_root=$ANDROID_SDK_ROOT
   condition: eq(variables['Agent.OS'], 'Linux')
   displayName: 'install Android image (Linux)'
 
