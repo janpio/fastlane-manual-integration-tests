@@ -170,7 +170,7 @@ steps:
     echo '---'
     ls -l $ANDROID_SDK_ROOT/..
     echo '---'
-    sudo $ANDROID_SDK_ROOT/../tools/emulator -avd test_android_emulator -no-snapshot --sdk_root=$ANDROID_SDK_ROOT
+    sudo $ANDROID_SDK_ROOT/emulator/emulator -avd test_android_emulator -no-snapshot --sdk_root=$ANDROID_SDK_ROOT
   condition: eq(variables['Agent.OS'], 'Linux')
   displayName: 'start Android emulator 1 (Linux)'
 
