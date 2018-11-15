@@ -174,9 +174,9 @@ steps:
     echo '---8---'
     $ANDROID_SDK_ROOT/emulator/emulator -list-avds
     echo '---9---'
-    sudo $ANDROID_SDK_ROOT/emulator/emulator -avd test_android_emulator -no-snapshot --sdk_root=$ANDROID_SDK_ROOT
+    sudo $ANDROID_SDK_ROOT/emulator/emulator -avd test_android_emulator -no-snapshot --sdk_root=$ANDROID_SDK_ROOT/..
     echo '---10---'
-    $ANDROID_SDK_ROOT/emulator/emulator -avd test_android_emulator -no-snapshot --sdk_root=$ANDROID_SDK_ROOT
+    $ANDROID_SDK_ROOT/emulator/emulator -avd test_android_emulator -no-snapshot --sdk_root=$ANDROID_SDK_ROOT/..
     echo '---11---'
     $ANDROID_SDK_ROOT/emulator/emulator -avd test_android_emulator -no-snapshot
   condition: eq(variables['Agent.OS'], 'Linux')
