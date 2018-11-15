@@ -4,7 +4,8 @@ end
 
 def write_to_file(string, file)
   # TODO: handle array
-  sh('echo ' + string.shellescape + ' >> ' + file)
+  string = string.shellescape unless FastlaneCore::Helper.windows?
+  sh('echo ' + string + ' >> ' + file)
   # TODO: replace by "set_in_file" that changes a value if the "method" already exists
 end
 
