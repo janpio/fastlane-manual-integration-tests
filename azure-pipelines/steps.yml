@@ -59,6 +59,39 @@ steps:
     touch ~/.android/repositories.cfg
   condition: or(eq(variables['Agent.OS'], 'Linux'), eq(variables['Agent.OS'], 'Windows_NT'))
   displayName: 'workaround: create .android/repositories.cfg (Linux, Windows)'
+
+### Fastlane workaround: create empty adb file for Windows
+# https://github.com/fastlane/fastlane/issues/13681
+- script: |
+    cd "%ANDROID_HOME%"
+    dir
+    echo '---'
+    cd "$ANDROID_HOME"
+    dir
+    echo '---'
+    cd "platform-tools"
+    echo '---'
+    dir
+    echo '---'
+    touch adb
+    dir
+    echo '---'
+    copy NUL adb
+    dir
+    echo '---'
+    echo foo > adb
+    dir
+    echo '---'
+    dir "%ANDROID_HOME%/platform-tools"
+    echo '---'
+    touch "%ANDROID_HOME%/platform-tools/adb"
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
+  displayName: 'workaround (fastlane): create empty adb file (Windows)'
+
+# TODO make ANDROID_HOME mine
+# https://stackoverflow.com/a/48657245/252627
+# sudo chown $USER:$USER $ANDROID_HOME -R
+
 ### Android Packages
 
 #### Workaround: tools vs. tools.old on Windows
@@ -199,26 +232,6 @@ steps:
     echo "Emulator started"
   condition: eq(variables['Agent.OS'], 'Darwin')
   displayName: 'start Android emulator (Mac)'
-
-### Fastlane workaround: create empty adb file for Windows
-# https://github.com/fastlane/fastlane/issues/13681
-- script: |
-    cd "%ANDROID_HOME%/platform-tools"
-    echo '---'
-    dir
-    echo '---'
-    touch adb
-    dir
-    echo '---'
-    copy NUL adb
-    dir
-    echo '---'
-    echo foo > adb
-    dir
-    echo '---'
-    dir "%ANDROID_HOME%/platform-tools"
-  condition: eq(variables['Agent.OS'], 'Windows_NT')
-  displayName: 'workaround (fastlane): create empty adb file (Windows)'
 
 ## secure files
 
