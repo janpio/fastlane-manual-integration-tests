@@ -53,6 +53,11 @@ steps:
   condition: eq(variables['Agent.OS'], 'Linux')
   displayName: 'workaround: make Android tools executable (Linux)'
 
+### Workaround: create ~/.android/repositories.cfg
+- bash: |
+    touch ~/.android/repositories.cfg
+  condition: or(eq(variables['Agent.OS'], 'Linux'), eq(variables['Agent.OS'], 'Windows_NT'))
+  displayName: 'workaround: create .android/repositories.cfg (Linux, Windows)'
 ### Android Packages
 
 #### Workaround: tools vs. tools.old on Windows
@@ -137,7 +142,7 @@ steps:
     "%ANDROID_HOME%/emulator/emulator" -list-avds
     echo ---
     "%ANDROID_HOME%/emulator/emulator" -avd test_android_emulator -no-snapshot
-    "%ANDROID_HOME%/platform-tools/adb" wait-for-device shell "while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82"
+    REM "%ANDROID_HOME%/platform-tools/adb" wait-for-device shell "while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82"
     echo ---
     "%ANDROID_HOME%/platform-tools/adb" devices
     echo "Emulator started"
