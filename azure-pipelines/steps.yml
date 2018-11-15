@@ -85,6 +85,7 @@ steps:
     dir "%ANDROID_HOME%/platform-tools"
     echo '---'
     touch "%ANDROID_HOME%/platform-tools/adb"
+    dir "%ANDROID_HOME%/platform-tools"
   condition: eq(variables['Agent.OS'], 'Windows_NT')
   displayName: 'workaround (fastlane): create empty adb file (Windows)'
 
