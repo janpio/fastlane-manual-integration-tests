@@ -120,7 +120,7 @@ steps:
 - script: |
     $ANDROID_SDK_ROOT/../tools/emulator -list-avds --sdk_root=$ANDROID_SDK_ROOT
     echo '---'
-    echo "no" | $ANDROID_SDK_ROOT/../tools/bin/avdmanager create avd -n test_android_emulator -k 'system-images;android-27;google_apis;x86' --force
+    echo "no" | sudo $ANDROID_SDK_ROOT/../tools/bin/avdmanager create avd -n test_android_emulator -k 'system-images;android-27;google_apis;x86' --force
     echo '---'
     $ANDROID_SDK_ROOT/../tools/emulator -list-avds --sdk_root=$ANDROID_SDK_ROOT
   condition: eq(variables['Agent.OS'], 'Linux')
@@ -170,7 +170,7 @@ steps:
     echo '---'
     ls -l $ANDROID_SDK_ROOT/..
     echo '---'
-    $ANDROID_SDK_ROOT/../tools/emulator -avd test_android_emulator -no-snapshot --sdk_root=$ANDROID_SDK_ROOT
+    sudo $ANDROID_SDK_ROOT/../tools/emulator -avd test_android_emulator -no-snapshot --sdk_root=$ANDROID_SDK_ROOT
   condition: eq(variables['Agent.OS'], 'Linux')
   displayName: 'start Android emulator 1 (Linux)'
 
