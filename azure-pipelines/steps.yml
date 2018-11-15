@@ -55,6 +55,7 @@ steps:
 
 ### Workaround: create ~/.android/repositories.cfg
 - bash: |
+    mkdir -p ~/.android
     touch ~/.android/repositories.cfg
   condition: or(eq(variables['Agent.OS'], 'Linux'), eq(variables['Agent.OS'], 'Windows_NT'))
   displayName: 'workaround: create .android/repositories.cfg (Linux, Windows)'
