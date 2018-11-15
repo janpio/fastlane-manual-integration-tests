@@ -46,12 +46,12 @@ steps:
 # workaround for https://developercommunity.visualstudio.com/content/problem/357997/error-permission-on-ubuntu-1604-agent.html?childToView=382739#comment-382739
 - bash: |
     cd $ANDROID_SDK_ROOT/../tools
-    chmod +x emulator
+    sudo chmod +x emulator
     cd bin
-    chmod +x sdkmanager
-    chmod +x avdmanager
+    sudo chmod +x sdkmanager
+    sudo chmod +x avdmanager
   condition: eq(variables['Agent.OS'], 'Linux')
-  displayName: 'workaround: make gradlew executable (Linux)'
+  displayName: 'workaround: make Android tools executable (Linux)'
 
 ### Android Packages
 
