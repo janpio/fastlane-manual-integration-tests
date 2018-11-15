@@ -34,8 +34,12 @@ platform :android do
     config_screengrab
     add_screengrab_to_project
     build_for_screenshots
-    run_screengrab
-    screenshots
+    if android_emulator_running?
+      run_screengrab
+      screenshots
+    elsif
+      puts "No Android device or emulator connected, skipping `fastlane screengrab` and `capture_android_screenshots`"
+    end
 
     build_release
 
@@ -212,3 +216,7 @@ end
 #######################################################
 
 import("../../Fastfile_common_methods")
+
+def android_emulator_running?
+  adb_devices.count > 0
+end
