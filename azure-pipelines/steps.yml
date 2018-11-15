@@ -31,20 +31,29 @@ steps:
     echo $ANDROID_SDK_ROOT
     # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=vsts&tabs=yaml%2Cbatch#set-in-script
     echo "##vso[task.setvariable variable=ANDROID_HOME]$ANDROID_SDK_ROOT"
-    echo '---'
-    ls $ANDROID_SDK_ROOT
-    echo '---'
-    ls $ANDROID_ROOT
-    echo '---'
-    ls $ANDROID_SDK_ROOT/..
-    echo '---'
-    cd $ANDROID_SDK_ROOT
-    cd ..
-    ls
   condition: eq(variables['Agent.OS'], 'Linux')
   displayName: 'workaround: set ANDROID_HOME (Linux)'
 
-### Android
+### Workaround: Understand Android SDK folder structure
+- script: |
+    ls $ANDROID_SDK_ROOT
+    echo '---'
+    ls $ANDROID_SDK_ROOT/..
+  condition: eq(variables['Agent.OS'], 'Linux')
+  displayName: 'workaround: understand Android SDK folder structure (Linux)'
+
+### Workaround: make Android tools executable
+# workaround for https://developercommunity.visualstudio.com/content/problem/357997/error-permission-on-ubuntu-1604-agent.html?childToView=382739#comment-382739
+- bash: |
+    cd $ANDROID_SDK_ROOT/../tools
+    chmod +x emulator
+    cd bin
+    chmod +x sdkmanager
+    chmod +x avdmanager
+  condition: eq(variables['Agent.OS'], 'Linux')
+  displayName: 'workaround: make gradlew executable (Linux)'
+
+### Android Packages
 
 #### Workaround: tools vs. tools.old on Windows
 # https://stackoverflow.com/questions/43796568/cant-update-tools-android-sdk-command-line-tools-for-windows
