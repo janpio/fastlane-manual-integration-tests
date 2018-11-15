@@ -189,43 +189,20 @@ steps:
 
 - script: |
     $ANDROID_HOME/platform-tools/adb devices
-    echo '---1---'
+    echo '---'
     $ANDROID_SDK_ROOT/../tools/emulator -list-avds
-    echo '---2---'
-    ls -l ~/.android/avd
-    echo '---3---'
-    cat ~/.android/avd/test_android_emulator.ini
-    echo '---4---'
-    ls -l ~/.android/avd/test_android_emulator.avd
-    echo '---4b---'
-    cat ~/.android/avd/test_android_emulator.avd/config.ini
-    echo '---5---'
-    echo 'whoami = '
-    whoami
-    echo 'group = '
-    id -g -n
-    echo '---6---'
-    ls -l $ANDROID_SDK_ROOT
-    echo '---7---'
-    ls -l $ANDROID_SDK_ROOT/..
-    echo '---8---'
-    $ANDROID_SDK_ROOT/emulator/emulator -list-avds
-    echo '---9---'
-    sudo $ANDROID_SDK_ROOT/emulator/emulator -avd test_android_emulator -no-snapshot --sdk_root=$ANDROID_SDK_ROOT/..
-    echo '---10---'
-    $ANDROID_SDK_ROOT/emulator/emulator -avd test_android_emulator -no-snapshot --sdk_root=$ANDROID_SDK_ROOT/..
-    echo '---11---'
+    echo '---'
     $ANDROID_SDK_ROOT/emulator/emulator -avd test_android_emulator -no-snapshot
   condition: eq(variables['Agent.OS'], 'Linux')
   displayName: 'start Android emulator 1 (Linux)'
 
-- script: |
-    nohup $ANDROID_SDK_ROOT/../tools/emulator -avd test_android_emulator -no-snapshot --sdk_root=$ANDROID_SDK_ROOT > /dev/null 2>&1 & $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
-    echo '---'
-    $ANDROID_HOME/platform-tools/adb devices
-    echo "Emulator started"
-  condition: eq(variables['Agent.OS'], 'Linux')
-  displayName: 'start Android emulator 2 (Linux)'
+# - script: |
+#     nohup $ANDROID_SDK_ROOT/../tools/emulator -avd test_android_emulator -no-snapshot --sdk_root=$ANDROID_SDK_ROOT > /dev/null 2>&1 & $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
+#     echo '---'
+#     $ANDROID_HOME/platform-tools/adb devices
+#     echo "Emulator started"
+#   condition: eq(variables['Agent.OS'], 'Linux')
+#   displayName: 'start Android emulator 2 (Linux)'
 
 - script: |
     $ANDROID_HOME/platform-tools/adb devices
