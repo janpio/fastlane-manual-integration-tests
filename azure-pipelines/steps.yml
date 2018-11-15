@@ -46,6 +46,25 @@ steps:
 
 ### Android Tools
 
+#### Check what is already installed
+
+- script: |
+    "%ANDROID_HOME%/tools.old/bin/sdkmanager"  --list
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
+  displayName: 'list already installed android tools (Windows)'
+
+- bash: |
+    $ANDROID_SDK_ROOT/../tools/bin/sdkmanager --list
+  condition: eq(variables['Agent.OS'], 'Linux')
+  displayName: 'list already installed android tools (Linux)'
+
+- bash: |
+    $ANDROID_HOME/tools/bin/sdkmanager --list
+  condition: eq(variables['Agent.OS'], 'Darwin')
+  displayName: 'list already installed android tools (Mac)'
+
+#### Install specific image
+
 - script: |
     REM https://stackoverflow.com/questions/43796568/cant-update-tools-android-sdk-command-line-tools-for-windows
     REM / https://issuetracker.google.com/issues/38094997
