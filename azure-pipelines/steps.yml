@@ -89,7 +89,7 @@ steps:
   displayName: 'install Android image (Windows)'
 
 - bash: |
-    echo "y" | $ANDROID_SDK_ROOT/../tools/bin/sdkmanager --install 'system-images;android-27;google_apis;x86' --sdk_root=$ANDROID_SDK_ROOT
+    sudo echo "y" | $ANDROID_SDK_ROOT/../tools/bin/sdkmanager --install 'system-images;android-27;google_apis;x86' --sdk_root=$ANDROID_SDK_ROOT
   condition: eq(variables['Agent.OS'], 'Linux')
   displayName: 'install Android image (Linux)'
 
@@ -112,7 +112,7 @@ steps:
 - script: |
     $ANDROID_SDK_ROOT/../tools/emulator -list-avds --sdk_root=$ANDROID_SDK_ROOT
     echo '---'
-    echo "no" | $ANDROID_SDK_ROOT/../tools/bin/avdmanager create avd -n test_android_emulator -k 'system-images;android-27;google_apis;x86' --force --sdk_root=$ANDROID_SDK_ROOT
+    echo "no" | $ANDROID_SDK_ROOT/../tools/bin/avdmanager create avd -n test_android_emulator -k 'system-images;android-27;google_apis;x86' --force
     echo '---'
     $ANDROID_SDK_ROOT/../tools/emulator -list-avds --sdk_root=$ANDROID_SDK_ROOT
   condition: eq(variables['Agent.OS'], 'Linux')
