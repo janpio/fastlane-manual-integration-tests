@@ -205,7 +205,13 @@ steps:
 - bash: |
     cd "$ANDROID_HOME/platform-tools"
     echo '---'
+    ls -l
+    echo '---'
     touch adb
+    ls -l
+    echo '---'
+    copy NUL adb
+    ls -l
     echo '---'
     ls -l "$ANDROID_HOME/platform-tools"
   condition: eq(variables['Agent.OS'], 'Windows_NT')
