@@ -155,11 +155,11 @@ steps:
     echo '---'
     $ANDROID_SDK_ROOT/../tools/emulator -list-avds
     echo '---'
-    ls ~/.android/avd
+    ls -l ~/.android/avd
     echo '---'
     cat ~/.android/avd/test_android_emulator.ini
     echo '---'
-    ls ~/.android/avd/test_android_emulator.avd
+    ls -l ~/.android/avd/test_android_emulator.avd
     echo '---'
     $ANDROID_SDK_ROOT/../tools/emulator -avd test_android_emulator -no-snapshot --sdk_root=$ANDROID_SDK_ROOT
   condition: eq(variables['Agent.OS'], 'Linux')
