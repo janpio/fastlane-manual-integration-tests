@@ -75,26 +75,18 @@ steps:
   displayName: 'install android tools (Windows)'
 
 - bash: |
+    echo "y" | $ANDROID_SDK_ROOT/../tools/bin/sdkmanager --install 'system-images;android-27;google_apis;x86'
+  condition: eq(variables['Agent.OS'], 'Linux')
+  displayName: 'install android tools (Linux)'
+
+- bash: |
     echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-27;google_apis;x86'
-  condition: or(eq(variables['Agent.OS'], 'Darwin'), eq(variables['Agent.OS'], 'Linux'))
-  displayName: 'install android tools (Mac/Linux)'
+  condition: eq(variables['Agent.OS'], 'Darwin')
+  displayName: 'install android tools (Mac)'
 
 ### Android Emulator
 
-- script: |
-    $ANDROID_HOME/emulator/emulator -list-avds
-    echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n test_android_emulator -k 'system-images;android-27;google_apis;x86' --force
-    $ANDROID_HOME/emulator/emulator -list-avds
-  condition: or(eq(variables['Agent.OS'], 'Darwin'), eq(variables['Agent.OS'], 'Linux'))
-  displayName: 'install android emulator (Mac/Linux)'
-
-- script: |
-    $ANDROID_HOME/platform-tools/adb devices
-    nohup $ANDROID_HOME/emulator/emulator -avd test_android_emulator -no-snapshot > /dev/null 2>&1 & $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
-    $ANDROID_HOME/platform-tools/adb devices
-    echo "Emulator started"
-  condition: or(eq(variables['Agent.OS'], 'Darwin'), eq(variables['Agent.OS'], 'Linux'))
-  displayName: 'start android emulator (Mac/Linux)'
+#### create AVD
 
 - script: |
     "%ANDROID_HOME%/emulator/emulator" -list-avds
@@ -102,6 +94,22 @@ steps:
     "%ANDROID_HOME%/emulator/emulator" -list-avds
   condition: eq(variables['Agent.OS'], 'Windows_NT')
   displayName: 'install android emulator (Windows)'
+
+- script: |
+    $ANDROID_SDK_ROOT/../tools/emulator -list-avds
+    echo "no" | $ANDROID_SDK_ROOT/../tools/bin/avdmanager create avd -n test_android_emulator -k 'system-images;android-27;google_apis;x86' --force
+    $ANDROID_SDK_ROOT/../tools/emulator -list-avds
+  condition: eq(variables['Agent.OS'], 'Linux')
+  displayName: 'install android emulator (Linux)'
+
+- script: |
+    $ANDROID_HOME/emulator/emulator -list-avds
+    echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n test_android_emulator -k 'system-images;android-27;google_apis;x86' --force
+    $ANDROID_HOME/emulator/emulator -list-avds
+  condition: eq(variables['Agent.OS'], 'Darwin')
+  displayName: 'install android emulator (Mac)'
+
+#### start
 
 - script: |
     "%ANDROID_HOME%/platform-tools/adb" devices
@@ -112,8 +120,24 @@ steps:
   condition: eq(variables['Agent.OS'], 'Windows_NT')
   displayName: 'start android emulator (Windows)'
 
-### create empty adb file for Windows
-# workaround for https://github.com/fastlane/fastlane/issues/13681
+- script: |
+    $ANDROID_HOME/platform-tools/adb devices
+    nohup $ANDROID_SDK_ROOT/../tools/emulator -avd test_android_emulator -no-snapshot > /dev/null 2>&1 & $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
+    $ANDROID_HOME/platform-tools/adb devices
+    echo "Emulator started"
+  condition: eq(variables['Agent.OS'], 'Linux')
+  displayName: 'start android emulator (Linux)'
+
+- script: |
+    $ANDROID_HOME/platform-tools/adb devices
+    nohup $ANDROID_HOME/emulator/emulator -avd test_android_emulator -no-snapshot > /dev/null 2>&1 & $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
+    $ANDROID_HOME/platform-tools/adb devices
+    echo "Emulator started"
+  condition: eq(variables['Agent.OS'], 'Darwin')
+  displayName: 'start android emulator (Mac)'
+
+### Fastlane workaround: create empty adb file for Windows
+# https://github.com/fastlane/fastlane/issues/13681
 - script: |
     cd "%ANDROID_HOME%/platform-tools"
     dir
@@ -150,7 +174,7 @@ steps:
   condition: or(eq(variables['Agent.OS'], 'Linux'), eq(variables['Agent.OS'], 'Darwin'))
   displayName: 'copy secure file filenames to environment variables (Linux / Mac)'
 
-## make gradlew executable
+## Workaround: make gradlew executable
 # workaround for https://developercommunity.visualstudio.com/content/problem/357997/error-permission-on-ubuntu-1604-agent.html?childToView=382739#comment-382739
 - bash: |
     cd android/androidapp
