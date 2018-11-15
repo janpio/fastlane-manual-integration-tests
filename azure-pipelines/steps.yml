@@ -104,9 +104,9 @@ steps:
 
 - script: |
     "%ANDROID_HOME%/emulator/emulator" -list-avds
-    echo '---'
-    echo "n" | "%ANDROID_HOME%/tools/bin/avdmanager" create avd -n test_android_emulator -k "system-images;android-27;google_apis;x86" --force
-    echo '---'
+    echo ---
+    echo no | "%ANDROID_HOME%/tools/bin/avdmanager" create avd -n test_android_emulator -k "system-images;android-27;google_apis;x86" --force
+    echo ---
     "%ANDROID_HOME%/emulator/emulator" -list-avds
   condition: eq(variables['Agent.OS'], 'Windows_NT')
   displayName: 'create AVD (Windows)'
@@ -133,12 +133,12 @@ steps:
 
 - script: |
     "%ANDROID_HOME%/platform-tools/adb" devices
-    echo '---'
+    echo ---
     "%ANDROID_HOME%/emulator/emulator" -list-avds
-    echo '---'
+    echo ---
     "%ANDROID_HOME%/emulator/emulator" -avd test_android_emulator -no-snapshot
     "%ANDROID_HOME%/platform-tools/adb" wait-for-device shell "while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82"
-    echo '---'
+    echo ---
     "%ANDROID_HOME%/platform-tools/adb" devices
     echo "Emulator started"
   condition: eq(variables['Agent.OS'], 'Windows_NT')
@@ -150,14 +150,16 @@ steps:
     $ANDROID_HOME/emulator/emulator -list-avds
     echo '---'
     $ANDROID_SDK_ROOT/../tools/emulator -avd test_android_emulator -no-snapshot --sdk_root=$ANDROID_SDK_ROOT
-    $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
-    echo '---'
+  condition: eq(variables['Agent.OS'], 'Linux')
+  displayName: 'start Android emulator 1 (Linux)'
+
+- script: |
     nohup $ANDROID_SDK_ROOT/../tools/emulator -avd test_android_emulator -no-snapshot --sdk_root=$ANDROID_SDK_ROOT > /dev/null 2>&1 & $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
     echo '---'
     $ANDROID_HOME/platform-tools/adb devices
     echo "Emulator started"
   condition: eq(variables['Agent.OS'], 'Linux')
-  displayName: 'start Android emulator (Linux)'
+  displayName: 'start Android emulator 2 (Linux)'
 
 - script: |
     $ANDROID_HOME/platform-tools/adb devices
