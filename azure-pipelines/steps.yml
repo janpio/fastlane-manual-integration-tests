@@ -25,8 +25,8 @@ steps:
 
 ## Android
 
-### ANDROID_HOME for Ubuntu
-# workaround for https://github.com/Microsoft/azure-pipelines-image-generation/pull/310
+### Workaround: ANDROID_HOME for Ubuntu
+# https://github.com/Microsoft/azure-pipelines-image-generation/pull/310
 - script: |
     echo $ANDROID_SDK_ROOT
     # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=vsts&tabs=yaml%2Cbatch#set-in-script
@@ -42,47 +42,52 @@ steps:
     cd ..
     ls
   condition: eq(variables['Agent.OS'], 'Linux')
-  displayName: 'set ANDROID_HOME (Linux)'
+  displayName: 'workaround: set ANDROID_HOME (Linux)'
 
-### Android Tools
+### Android
+
+#### Workaround: tools vs. tools.old on Windows
+# https://stackoverflow.com/questions/43796568/cant-update-tools-android-sdk-command-line-tools-for-windows
+# / https://issuetracker.google.com/issues/38094997
+# https://stackoverflow.com/a/19517873/252627
+- script: |
+    xcopy "%ANDROID_HOME%/tools" "%ANDROID_HOME%/tools.old" /e /i /h
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
+  displayName: 'workaround: rename Android Tools folder (Windows)'
 
 #### Check what is already installed
 
 - script: |
     "%ANDROID_HOME%/tools.old/bin/sdkmanager"  --list
   condition: eq(variables['Agent.OS'], 'Windows_NT')
-  displayName: 'list already installed android tools (Windows)'
+  displayName: 'list already installed Android packages (Windows)'
 
 - bash: |
     $ANDROID_SDK_ROOT/../tools/bin/sdkmanager --list
   condition: eq(variables['Agent.OS'], 'Linux')
-  displayName: 'list already installed android tools (Linux)'
+  displayName: 'list already installed Android packages (Linux)'
 
 - bash: |
     $ANDROID_HOME/tools/bin/sdkmanager --list
   condition: eq(variables['Agent.OS'], 'Darwin')
-  displayName: 'list already installed android tools (Mac)'
+  displayName: 'list already installed Android packages (Mac)'
 
 #### Install specific image
 
 - script: |
-    REM https://stackoverflow.com/questions/43796568/cant-update-tools-android-sdk-command-line-tools-for-windows
-    REM / https://issuetracker.google.com/issues/38094997
-    REM https://stackoverflow.com/a/19517873/252627
-    xcopy "%ANDROID_HOME%/tools" "%ANDROID_HOME%/tools.old" /e /i /h
     echo "y" | "%ANDROID_HOME%/tools.old/bin/sdkmanager" "system-images;android-27;google_apis;x86"
   condition: eq(variables['Agent.OS'], 'Windows_NT')
-  displayName: 'install android tools (Windows)'
+  displayName: 'install Android image (Windows)'
 
 - bash: |
     echo "y" | $ANDROID_SDK_ROOT/../tools/bin/sdkmanager --install 'system-images;android-27;google_apis;x86'
   condition: eq(variables['Agent.OS'], 'Linux')
-  displayName: 'install android tools (Linux)'
+  displayName: 'install Android image (Linux)'
 
 - bash: |
     echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-27;google_apis;x86'
   condition: eq(variables['Agent.OS'], 'Darwin')
-  displayName: 'install android tools (Mac)'
+  displayName: 'install Android image (Mac)'
 
 ### Android Emulator
 
@@ -93,21 +98,21 @@ steps:
     echo "n" | "%ANDROID_HOME%/tools/bin/avdmanager" create avd -n test_android_emulator -k "system-images;android-27;google_apis;x86" --force
     "%ANDROID_HOME%/emulator/emulator" -list-avds
   condition: eq(variables['Agent.OS'], 'Windows_NT')
-  displayName: 'install android emulator (Windows)'
+  displayName: 'create AVD (Windows)'
 
 - script: |
     $ANDROID_SDK_ROOT/../tools/emulator -list-avds
     echo "no" | $ANDROID_SDK_ROOT/../tools/bin/avdmanager create avd -n test_android_emulator -k 'system-images;android-27;google_apis;x86' --force
     $ANDROID_SDK_ROOT/../tools/emulator -list-avds
   condition: eq(variables['Agent.OS'], 'Linux')
-  displayName: 'install android emulator (Linux)'
+  displayName: 'create AVD (Linux)'
 
 - script: |
     $ANDROID_HOME/emulator/emulator -list-avds
     echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n test_android_emulator -k 'system-images;android-27;google_apis;x86' --force
     $ANDROID_HOME/emulator/emulator -list-avds
   condition: eq(variables['Agent.OS'], 'Darwin')
-  displayName: 'install android emulator (Mac)'
+  displayName: 'create AVD (Mac)'
 
 #### start
 
@@ -118,7 +123,7 @@ steps:
     "%ANDROID_HOME%/platform-tools/adb" devices
     echo "Emulator started"
   condition: eq(variables['Agent.OS'], 'Windows_NT')
-  displayName: 'start android emulator (Windows)'
+  displayName: 'start Android emulator (Windows)'
 
 - script: |
     $ANDROID_HOME/platform-tools/adb devices
@@ -126,7 +131,7 @@ steps:
     $ANDROID_HOME/platform-tools/adb devices
     echo "Emulator started"
   condition: eq(variables['Agent.OS'], 'Linux')
-  displayName: 'start android emulator (Linux)'
+  displayName: 'start Android emulator (Linux)'
 
 - script: |
     $ANDROID_HOME/platform-tools/adb devices
@@ -134,7 +139,7 @@ steps:
     $ANDROID_HOME/platform-tools/adb devices
     echo "Emulator started"
   condition: eq(variables['Agent.OS'], 'Darwin')
-  displayName: 'start android emulator (Mac)'
+  displayName: 'start Android emulator (Mac)'
 
 ### Fastlane workaround: create empty adb file for Windows
 # https://github.com/fastlane/fastlane/issues/13681
@@ -144,7 +149,7 @@ steps:
     copy NUL adb
     dir
   condition: eq(variables['Agent.OS'], 'Windows_NT')
-  displayName: 'fastlane workaround: create empty adb file (Windows)'
+  displayName: 'workaround (fastlane): create empty adb file (Windows)'
 
 ## secure files
 
@@ -180,7 +185,7 @@ steps:
     cd android/androidapp
     chmod +x gradlew
   condition: or(eq(variables['Agent.OS'], 'Linux'), eq(variables['Agent.OS'], 'Darwin'))
-  displayName: 'make gradlew executable (Linux / Mac)'
+  displayName: 'workaround: make gradlew executable (Linux / Mac)'
 
 # lanes
 
