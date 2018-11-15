@@ -160,6 +160,8 @@ steps:
     cat ~/.android/avd/test_android_emulator.ini
     echo '---4---'
     ls -l ~/.android/avd/test_android_emulator.avd
+    echo '---4b---'
+    cat ~/.android/avd/test_android_emulator.avd/config.ini
     echo '---5---'
     echo 'whoami = '
     whoami
