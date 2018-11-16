@@ -66,6 +66,8 @@ platform :ios do
     run_pilot_remove
     run_pilot_list
     run_pilot_distribute
+
+    cleanup
   end
 
   #######################################################
@@ -288,6 +290,15 @@ platform :ios do
 
   lane :run_pilot_distribute do
     #run_fastlane('pilot distribute')
+  end
+
+  #######################################################
+
+  lane :cleanup do
+    File.delete('Appfile')
+    File.delete('Deliverfile')
+    File.delete('Gymfile')
+    File.delete('Scanfile')
   end
 
   #######################################################
