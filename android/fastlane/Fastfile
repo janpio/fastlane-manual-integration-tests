@@ -16,6 +16,7 @@ lane :environment do
   UI.message(ENV['PROJECT'])
   UI.message(ENV['PACKAGE_NAME'])
   UI.message(ENV['JSON_KEY_FILE'])
+  UI.message(ENV['KEYSTORE_FILE'])
   UI.message(ENV['KEYSTORE_ALIAS'])
   UI.message(ENV['KEYSTORE_PASSWORD'])
 end
