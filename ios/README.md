@@ -1,113 +1,92 @@
 # iOS
 
+This folder contains an iOS mobile app project with _fastlane_ integration.
+
+The `Fastfile` covers the following tasks:
+
+* Test the app
+* Create the app in the Apple Developer Console and App Store Connect
+* Create necessary certificates
+* Build the app
+* Take app screenshots
+* Frame the created screenshots
+* Upload to App Store Connect
+* Upload to TestFlight
+* Manage TestFlight
+
+It runs and tests the following fastlane actions and commands (`fastlane ...`) in its `all` lane (executed via `fastlane ios all`):
+
+
 ## Steps
 
 A list of fastlane CLI commands and hypothetical lanes (with the actions they execute) that can be used to test:
 
 ```
-fastlane init
-
 # test
 fastlane scan init
-  fastlane ios run_scan_init
-fastlane ios config_scan
 fastlane scan
-  fastlane ios run_scan
-fastlane ios tests (run_tests)
+run_tests
 
-# Apple Developer Console + App Store Connect
+# create
 fastlane produce
-  fastlane ios run_produce
-fastlane ios create_app (create_app_online)
+create_app_online
 
 # certificates
 fastlane match init
-  fastlane ios run_match_init
-fastlane ios config_match
 fastlane match
-  fastlane ios run_match
-    #development
-    #appstore
-    #adhoc
-fastlane ios certificates (sync_code_signing )
-# TODO: match nuke
+sync_code_signing
 
-# build with xcode
+# build
 fastlane gym init
-  fastlane ios run_gym_init
-fastlane ios config_gym
 fastlane gym
-    debug
-    release
-fastlane ios build (build_ios_app)
-    debug
-    release
+build_ios_app
 
 # screenshots
 fastlane snapshot init
-  fastlane ios run_snapshot_init
-fastlane ios config_snapshot
 fastlane snapshot
-  fastlane ios run_snapshot
-fastlane ios screenshots (capture_ios_screenshots)
+capture_ios_screenshots
 fastlane snapshot update
 fastlane snapshot reset_simulators
 
-# frame screenshots
+# frame
 fastlane frameit download_frames
 fastlane frameit
 fastlane frameit silver
-fastlane ios frame (frame_screenshots)
+frame_screenshots
 
-# App Store Connect
+# download
 fastlane deliver init
-  fastlane ios run_deliver_init
-fastlane ios config_deliver
-fastlane ios reset_deliver_data
 fastlane deliver download_screenshots
-  fastlane ios run_deliver_download_screenshots
 fastlane deliver download_metadata
-  fastlane ios run_deliver_download_metadata
+
+# upload
 fastlane deliver
-  fastlane ios run_deliver
-fastlane ios upload (upload_to_app_store)
+upload_to_app_store
 fastlane deliver submit_build
-  fastlane ios run_deliver_submit_build
 
-# Testflight
+# upload testflight
 fastlane pilot upload
-  fastlane ios run_pilot_upload
-fastlane ios testflight (upload_to_testflight)
+upload_to_testflight
 
+# manage testflight
 fastlane pilot builds
-  fastlane ios run_pilot_builds
 fastlane pilot list
-  fastlane ios run_pilot_list
 fastlane pilot add x
-  fastlane ios run_pilot_add
 fastlane pilot list
-  fastlane ios run_pilot_list
 fastlane pilot import
-  fastlane ios run_pilot_import
 fastlane pilot list
-  fastlane ios run_pilot_list
 fastlane pilot find x
-  fastlane ios run_pilot_find
 fastlane pilot export
-  fastlane ios run_pilot_export
 fastlane pilot remove x
-  fastlane ios run_pilot_remove
 fastlane pilot list
-  fastlane ios run_pilot_list
-
 fastlane pilot distribute
-  fastlane ios run_pilot_distribute
 ```
 
-## Actions to integrate
+## TODO: iOS focused actions left to integrate
+
+Extracted from private, real world testing `Fastfile`:
 
 ```
-# extracted from private testing `Fastfile`
 register_devices
 clear_derived_data
 version_get_podspec
@@ -131,7 +110,7 @@ verify_build
 increment_build_number
 ```
 
-## Not covered
+## Not (yet) covered actions/tools
 
 ```
 fastlane cert / get_certificates
@@ -140,5 +119,9 @@ fastlane sigh / get_provisioning_profile
 fastlane sigh *
 fastlane match nuke
 fastlane match change_password
-fastlane produce *
+fastlane produce * # TODO check, seems to be used above
 ```
+
+## Environment Variables
+
+To successfully execute the lanes require all the _environment variables_ mentioned in `.env.example` to be set, or an `.env.*` file supplied to fastlane via the `env` parameter (e.g. `fastlane all --env=example`).
