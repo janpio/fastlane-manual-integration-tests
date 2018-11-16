@@ -4,44 +4,68 @@ platform :ios do
   lane :all do
     create_appfile
 
+    # test
     run_scan_init
     config_scan
     run_scan
     tests
 
+    # create
     run_produce
     create_app
 
+    # certificates
     config_match
     run_match
     certificates
 
+    # build
     run_gym_init
     config_gym
     run_gym
     build
 
+    # screenshots
     run_snapshot_init
     config_snapshot
     run_snapshot
     screenshots
 
+    # frame
     run_frameit_download_frames
     run_frameit
     run_frameit_silver
     frame
 
+    # download
     run_deliver_init
-    # reset_deliver_data
+    # TODO reset_deliver_data
     run_deliver_download_screenshots
-    # reset_deliver_data
+    # TODO reset_deliver_data
     run_deliver_download_metadata
-    # reset_deliver_data
+    # TODO reset_deliver_data
+
+    # upload
     run_deliver
     upload
     run_deliver_submit_build
 
+    # upload testflight
+    run_pilot_upload
+    upload_testflight
 
+    # manage testflight
+    run_pilot_builds
+    run_pilot_list
+    run_pilot_add
+    run_pilot_list
+    run_pilot_import
+    run_pilot_list
+    run_pilot_find
+    run_pilot_export
+    run_pilot_remove
+    run_pilot_list
+    run_pilot_distribute
   end
 
   #######################################################
@@ -101,6 +125,11 @@ platform :ios do
     run_fastlane('match')
   end
 
+  # TODO
+  #development
+  #appstore
+  #adhoc
+
   lane :certificates do
     sync_code_signing(
       #force: true
@@ -125,9 +154,17 @@ platform :ios do
     run_fastlane('gym')
   end
 
+  # TODO
+  # debug
+  # release
+
   lane :build do
     build_ios_app
   end
+
+  # TODO
+  # debug
+  # release
 
   #######################################################
 
@@ -148,6 +185,9 @@ platform :ios do
   lane :screenshots do
     capture_ios_screenshots
   end
+
+  # TODO fastlane snapshot update
+  # TODO fastlane snapshot reset_simulators
 
   #######################################################
 
@@ -176,11 +216,11 @@ platform :ios do
   end
 
   lane :config_deliver do
-    # ???
+    # TODO
   end
 
-  lane :reset_deliver_data  do
-    # ???
+  lane :reset_deliver_data do
+    # TODO
   end
 
   lane :run_deliver_download_screenshots do
@@ -207,22 +247,52 @@ platform :ios do
   end
 
   #######################################################
+
+  # TODO Testflight
+
+  lane :run_pilot_upload do
+    #run_fastlane('pilot upload')
+  end
+
+  lane :upload_testflight do
+    #upload_to_testflight
+  end
+
+  lane :run_pilot_builds do
+    #run_fastlane('pilot builds')
+  end
+
+  lane :run_pilot_list do
+    #run_fastlane('pilot list')
+  end
+
+  lane :run_pilot_add do
+    #run_fastlane('pilot add x')
+  end
+
+  lane :run_pilot_import do
+    #run_fastlane('pilot import')
+  end
+
+  lane :run_pilot_find do
+    #run_fastlane('pilot find x')
+  end
+
+  lane :run_pilot_export do
+    #run_fastlane('pilot export')
+  end
+
+  lane :run_pilot_remove do
+    #run_fastlane('pilot remove x')
+  end
+
+  lane :run_pilot_distribute do
+    #run_fastlane('pilot distribute')
+  end
+
+  #######################################################
 end
 
 #######################################################
 
-def create_file(file)
-  sh('touch ' + file)
-end
-
-def write_to_file(string, file)
-  # TODO: handle array
-  sh('echo ' + string + ' >> ' + file)
-  # TODO: replace by "set_in_file" that changes a value if the "method" already exists
-end
-
-def run_fastlane(command)
-  Dir.chdir '..' do
-    sh('bundle exec fastlane ' + command)
-  end
-end
+import("../../Fastfile_common_methods")
