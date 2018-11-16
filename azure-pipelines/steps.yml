@@ -131,6 +131,7 @@ steps:
   condition: eq(variables['Agent.OS'], 'Windows_NT')
   displayName: 'install Android image (Windows)'
 
+# this also installs and creates /tools and /emulator in the /sdk folder
 - bash: |
     echo "y" | sudo $ANDROID_SDK_ROOT/../tools/bin/sdkmanager --install 'system-images;android-27;google_apis;x86' --sdk_root=$ANDROID_SDK_ROOT
   condition: eq(variables['Agent.OS'], 'Linux')
