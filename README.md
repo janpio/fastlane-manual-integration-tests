@@ -22,4 +22,4 @@ I specifically needed this when making fastlane work on Linux and Windows, as a 
 
 ## Contribute
 
-Please [create issues](issues/new) or [open pull requests](pulls) if something doesn't work as expected or is missing.
+Please [create issues](https://github.com/janpio/fastlane-e2e-tests/issues/new) or [open pull requests](https://github.com/janpio/fastlane-e2e-tests/pulls) if something doesn't work as expected or is missing.
