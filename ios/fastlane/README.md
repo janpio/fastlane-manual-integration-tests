@@ -176,6 +176,61 @@ fastlane ios upload
 fastlane ios run_deliver_submit_build
 ```
 
+### ios run_pilot_upload
+```
+fastlane ios run_pilot_upload
+```
+
+### ios upload_testflight
+```
+fastlane ios upload_testflight
+```
+
+### ios run_pilot_builds
+```
+fastlane ios run_pilot_builds
+```
+
+### ios run_pilot_list
+```
+fastlane ios run_pilot_list
+```
+
+### ios run_pilot_add
+```
+fastlane ios run_pilot_add
+```
+
+### ios run_pilot_import
+```
+fastlane ios run_pilot_import
+```
+
+### ios run_pilot_find
+```
+fastlane ios run_pilot_find
+```
+
+### ios run_pilot_export
+```
+fastlane ios run_pilot_export
+```
+
+### ios run_pilot_remove
+```
+fastlane ios run_pilot_remove
+```
+
+### ios run_pilot_distribute
+```
+fastlane ios run_pilot_distribute
+```
+
+### ios cleanup
+```
+fastlane ios cleanup
+```
+
 
 ----
 
