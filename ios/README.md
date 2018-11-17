@@ -124,4 +124,4 @@ fastlane produce * # TODO check, seems to be used above
 
 ## Environment Variables
 
-To successfully execute the lanes require all the _environment variables_ mentioned in `.env.example` to be set, or an `.env.*` file supplied to fastlane via the `env` parameter (e.g. `fastlane all --env=example`).
+To successfully execute the lanes require all the _environment variables_ mentioned in `fastlane/.env.example` to be set. Alternatively you can create an `fastlane/.env` file or an `fastlane/.env.*` file which is supplied to fastlane via the `env` parameter (e.g. `fastlane all --env=example`).
