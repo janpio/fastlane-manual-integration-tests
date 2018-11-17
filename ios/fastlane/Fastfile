@@ -295,10 +295,10 @@ platform :ios do
   #######################################################
 
   lane :cleanup do
-    File.delete('Appfile')
-    File.delete('Deliverfile')
-    File.delete('Gymfile')
-    File.delete('Scanfile')
+    remove_file('Appfile')
+    remove_file('Deliverfile')
+    remove_file('Gymfile')
+    remove_file('Scanfile')
   end
 
   #######################################################

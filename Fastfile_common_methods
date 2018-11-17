@@ -36,3 +36,7 @@ end
 def ensure_folder_exists(folder)
   Dir.exist?(folder) || FileUtils.mkdir_p(folder)
 end
+
+def remove_file(file)
+  File.delete(file) if File.exist?(file)
+end

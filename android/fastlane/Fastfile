@@ -206,8 +206,8 @@ platform :android do
   #######################################################
 
   lane :cleanup do
-    File.delete('Appfile')
-    File.delete('Screengrabfile')
+    remove_file('Appfile')
+    remove_file('Screengrabfile')
   end
 
   #######################################################
