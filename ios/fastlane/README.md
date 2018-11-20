@@ -29,6 +29,11 @@ fastlane environment
 fastlane ios all
 ```
 
+### ios rest
+```
+fastlane ios rest
+```
+
 ### ios create_appfile
 ```
 fastlane ios create_appfile
