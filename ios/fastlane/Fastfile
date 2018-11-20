@@ -188,7 +188,7 @@ platform :ios do
   end
 
   lane :config_snapshot do
-    write_to_file('???', '???')
+    write_to_file('project("iosapp/iosapp.xcodeproj")', 'Snapfile')
   end
 
   lane :run_snapshot do
