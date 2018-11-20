@@ -257,7 +257,7 @@ platform :ios do
   lane :upload do
     upload_to_app_store(
       force: true,
-      submit_for_review: true
+      submit_for_review: false
     )
   end
 
