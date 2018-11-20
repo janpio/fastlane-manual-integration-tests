@@ -317,6 +317,7 @@ platform :ios do
     remove_file('Gymfile')
     remove_file('Scanfile')
     remove_file('Matchfile')
+    remove_file('Snapfile')
   end
 
   #######################################################
