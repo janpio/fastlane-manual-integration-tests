@@ -129,6 +129,11 @@ fastlane ios screenshots
 fastlane ios run_frameit_download_frames
 ```
 
+### ios config_frameit
+```
+fastlane ios config_frameit
+```
+
 ### ios run_frameit
 ```
 fastlane ios run_frameit

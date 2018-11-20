@@ -210,6 +210,10 @@ platform :ios do
     run_fastlane('frameit download_frames')
   end
 
+  lane :config_frameit do
+    # TODO
+  end
+
   lane :run_frameit do
     run_fastlane('frameit')
   end
