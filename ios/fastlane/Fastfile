@@ -11,6 +11,7 @@ end
 platform :ios do
   lane :all do
     create_appfile
+    prepare_project
 
     # test
     run_scan_init
@@ -90,6 +91,13 @@ platform :ios do
     create_file('Appfile')
     write_to_file('app_identifier("' + ENV['APP_IDENTIFIER'] + '")', 'Appfile')
     write_to_file('apple_id("' + ENV['APPLE_ID'] + '")', 'Appfile')
+  end
+
+  lane :prepare_project do
+    #increment_build_number(
+    increment_version_number_in_plist(
+      xcodeproj: "iosapp/iosapp.xcodeproj"
+    )
   end
 
   #######################################################

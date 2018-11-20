@@ -39,6 +39,11 @@ fastlane ios rest
 fastlane ios create_appfile
 ```
 
+### ios prepare_project
+```
+fastlane ios prepare_project
+```
+
 ### ios run_scan_init
 ```
 fastlane ios run_scan_init
