@@ -94,6 +94,7 @@ platform :ios do
 
   lane :config_scan do
     write_to_file('project("iosapp/iosapp.xcodeproj")', 'Scanfile')
+    write_to_file('device("iPhone 5s")', 'Scanfile') # TODO Why is scan unstable without this line? Fastlane issue?
   end
 
   lane :run_scan do
