@@ -189,6 +189,8 @@ platform :ios do
 
   lane :config_snapshot do
     write_to_file('project("iosapp/iosapp.xcodeproj")', 'Snapfile')
+    write_to_file('devices(["iPhone 5s"])', 'Snapfile')
+    write_to_file('languages(["en-US"])', 'Snapfile')
   end
 
   lane :run_snapshot do
