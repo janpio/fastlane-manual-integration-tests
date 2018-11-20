@@ -1,5 +1,13 @@
 default_platform('ios')
 
+lane :environment do
+  UI.message(lane_context[SharedValues::ENVIRONMENT])
+  UI.message(ENV['APP_IDENTIFIER'])
+  UI.message(ENV['APPLE_ID'])
+  UI.message(ENV['MATCH_REPO'])
+  UI.message(ENV['FASTLANE_PASSWORD'])
+end
+
 platform :ios do
   lane :all do
     create_appfile
