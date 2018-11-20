@@ -98,7 +98,7 @@ platform :ios do
   end
 
   lane :run_scan do
-    run_fastlane('scan')
+    #run_fastlane('scan') # TODO disabled to speed up process
   end
 
   lane :tests do
