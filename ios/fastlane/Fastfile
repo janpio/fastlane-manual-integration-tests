@@ -128,12 +128,15 @@ platform :ios do
     # ??? TODO
   end
 
+  # TODO create certificates in empty repo
+
   lane :config_match do
+    # TODO create new git branch on repo
     write_to_file('git_url("'+ ENV['MATCH_REPO'] + '")', 'Matchfile')
   end
 
   lane :run_match do
-    run_fastlane('match')
+    #run_fastlane('match')
   end
 
   # TODO
