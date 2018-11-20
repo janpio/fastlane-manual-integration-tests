@@ -235,7 +235,7 @@ platform :ios do
   end
 
   lane :config_deliver do
-    # TODO
+    write_to_file('run_precheck_before_submit(false)', 'Deliverfile')
   end
 
   lane :reset_deliver_data do
