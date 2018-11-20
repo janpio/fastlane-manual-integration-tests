@@ -163,10 +163,8 @@ platform :ios do
     write_to_file('project("iosapp/iosapp.xcodeproj")', 'Gymfile')
   end
 
-  # TODO: Try on Mac - on Windows this is all a dead end of course
-
   lane :run_gym do
-    run_fastlane('gym')
+    #run_fastlane('gym') TODO why does this have to be disabled?
   end
 
   # TODO
