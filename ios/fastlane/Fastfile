@@ -41,12 +41,16 @@ platform :ios do
 
     # frame
     run_frameit_download_frames
+    config_frameit
     run_frameit
     run_frameit_silver
     frame
 
-    # download
+    # down/upload
     run_deliver_init
+    config_deliver
+
+    # download
     # TODO reset_deliver_data
     run_deliver_download_screenshots
     # TODO reset_deliver_data
@@ -211,7 +215,26 @@ platform :ios do
   end
 
   lane :config_frameit do
-    # TODO
+  write_to_file('{
+  "device_frame_version": "latest",
+  "default": {
+    "background": "./background.jpg",
+    "padding": 50
+  },
+  "data": [
+    {
+      "filter": "01StartScreen",
+      "title": {
+        "text": "Start",
+        "color": "#d21559"
+      },
+      "keyword": {
+        "text": "screen",
+        "color": "#d21559"
+      }
+    }
+  ]
+}', 'screenshots/Framefile.json')
   end
 
   lane :run_frameit do
@@ -318,6 +341,7 @@ platform :ios do
     remove_file('Scanfile')
     remove_file('Matchfile')
     remove_file('Snapfile')
+    remove_file('screenshots/Framefile.json')
   end
 
   #######################################################
