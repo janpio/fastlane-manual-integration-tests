@@ -310,6 +310,7 @@ platform :ios do
     remove_file('Deliverfile')
     remove_file('Gymfile')
     remove_file('Scanfile')
+    remove_file('Matchfile')
   end
 
   #######################################################
