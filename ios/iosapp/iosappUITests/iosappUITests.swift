@@ -35,6 +35,6 @@ class iosappUITests: XCTestCase {
         // Use recording to get started writing UI tests.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         XCUIApplication().staticTexts["Label"].tap()
-        snapshot("01LoginScreen")
+        snapshot("01StartScreen")
     }
 }
