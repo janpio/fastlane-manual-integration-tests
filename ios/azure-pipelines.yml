@@ -25,7 +25,7 @@ jobs:
   - script: |
       cd ios
       bundle exec fastlane all
-    displayName: 'bundle exec fastlane all'
+    displayName: 'bundle exec fastlane all --verbose'
     env:
       FASTLANE_PASSWORD: $(FASTLANE_PASSWORD)
       FASTLANE_SESSION: $(FASTLANE_SESSION)
