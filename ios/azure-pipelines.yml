@@ -25,3 +25,4 @@ jobs:
     displayName: 'bundle exec fastlane all'
     env:
       FASTLANE_PASSWORD: $(FASTLANE_PASSWORD)
+      FASTLANE_SESSION: $(FASTLANE_SESSION)
