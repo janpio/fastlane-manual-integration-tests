@@ -18,6 +18,9 @@ jobs:
       cd ios
       bundle exec fastlane environment
     displayName: 'bundle exec fastlane environment'
+    env:
+      FASTLANE_PASSWORD: $(FASTLANE_PASSWORD)
+      FASTLANE_SESSION: $(FASTLANE_SESSION)
 
   - script: |
       cd ios

@@ -1,11 +1,7 @@
 default_platform('ios')
 
 lane :environment do
-  UI.message(lane_context[SharedValues::ENVIRONMENT])
-  UI.message(ENV['APP_IDENTIFIER'])
-  UI.message(ENV['APPLE_ID'])
-  UI.message(ENV['MATCH_REPO'])
-  UI.message(ENV['FASTLANE_PASSWORD'])
+  print_environment_variables(['APP_IDENTIFIER', 'APPLE_ID', 'MATCH_REPO', 'FASTLANE_PASSWORD', 'FASTLANE_SESSION'])
 end
 
 platform :ios do

@@ -40,3 +40,15 @@ end
 def remove_file(file)
   File.delete(file) if File.exist?(file)
 end
+
+def print_environment_variables(variables)
+  rows = []
+  foo = lane_context[SharedValues::ENVIRONMENT] ||= ""
+  rows << ['lane_context[SharedValues::ENVIRONMENT]', foo]
+  variables.each do |variable|
+    rows << [variable, ENV[variable]]
+  end
+  puts ""
+  puts(Terminal::Table.new(rows: FastlaneCore::PrintTable.transform_output(rows),
+                           title: "Defined environment variables and their values"))
+end
