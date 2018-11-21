@@ -23,3 +23,5 @@ jobs:
       cd ios
       bundle exec fastlane all
     displayName: 'bundle exec fastlane all'
+    env:
+      FASTLANE_PASSWORD: $(FASTLANE_PASSWORD)
