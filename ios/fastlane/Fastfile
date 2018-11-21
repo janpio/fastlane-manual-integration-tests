@@ -123,7 +123,7 @@ platform :ios do
   # fastlane ios create_app (create_app_online)
 
   lane :run_produce do
-    run_fastlane('produce --app_name="Fastlane iOS ManInteg"')
+    #run_fastlane('produce --app_name="Fastlane iOS ManInteg"')
   end
 
   lane :create_app do
