@@ -143,6 +143,7 @@ platform :ios do
   lane :config_match do
     # TODO create new git branch on repo
     write_to_file('git_url("'+ ENV['MATCH_REPO'] + '")', 'Matchfile')
+    setup_travis
   end
 
   lane :run_match do
