@@ -34,8 +34,7 @@ jobs:
 
   - task: CopyFiles@2
     inputs:
-      sourceFolder: '/tmp'
-      contents: **/*.log
+      contents: _buildOutput\**
       targetFolder: $(Build.ArtifactStagingDirectory)
     condition: always()
 
