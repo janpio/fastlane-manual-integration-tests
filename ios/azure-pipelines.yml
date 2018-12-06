@@ -32,8 +32,15 @@ jobs:
       FASTLANE_SESSION: $(FASTLANE_SESSION)
       MATCH_PASSWORD: $(MATCH_PASSWORD)
 
-  - task: PublishPipelineArtifact@0
+  - task: CopyFiles@2
     inputs:
-      artifactName: 'tmp'
-      targetPath: '/tmp/'
+      sourceFolder: /tmp 
+      contents: *.log
+      targetFolder: $(Build.ArtifactStagingDirectory)
+    condition: always()
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: spaceship
     condition: always()
