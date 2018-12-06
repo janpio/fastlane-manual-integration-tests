@@ -144,6 +144,8 @@ platform :ios do
     # TODO create new git branch on repo
     write_to_file('git_url("'+ ENV['MATCH_REPO'] + '")', 'Matchfile')
     setup_travis
+    sh("security find-identity -v -p codesigning")
+    sh("security find-identity -v -p codesigning fastlane_tmp_keychain")
   end
 
   lane :run_match do
