@@ -162,6 +162,8 @@ platform :ios do
       #force: true
       type: "appstore"
     )
+    sh("security find-identity -v -p codesigning fastlane_tmp_keychain")
+    sh("security find-identity -v -p codesigning")
   end
 
   # TODO: match nuke
