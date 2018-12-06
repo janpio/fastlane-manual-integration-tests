@@ -36,7 +36,7 @@ jobs:
     inputs:
       SourceFolder: '/tmp'
       Contents: |
-       **/*
+       **/*.log
        !.git/**/*
       targetFolder: $(Build.ArtifactStagingDirectory)
     condition: always()
