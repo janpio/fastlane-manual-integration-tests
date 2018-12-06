@@ -24,6 +24,10 @@ jobs:
       MATCH_PASSWORD: $(MATCH_PASSWORD)
 
   - script: |
+      security find-identity -v -p codesigning
+    displayName: 'security find-identity -v -p codesigning'
+
+  - script: |
       cd ios
       bundle exec fastlane all
     displayName: 'bundle exec fastlane all --verbose'
