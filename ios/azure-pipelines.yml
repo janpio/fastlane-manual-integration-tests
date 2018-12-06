@@ -36,3 +36,4 @@ jobs:
     inputs:
       artifactName: 'tmp'
       targetPath: '/tmp/'
+    continueOnError: true
