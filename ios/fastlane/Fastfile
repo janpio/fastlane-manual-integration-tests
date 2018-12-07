@@ -191,7 +191,9 @@ platform :ios do
   # release
 
   lane :build do
-    build_ios_app
+    build_ios_app(
+      export_xcargs: "-allowProvisioningUpdates"
+    )
   end
 
   # TODO
