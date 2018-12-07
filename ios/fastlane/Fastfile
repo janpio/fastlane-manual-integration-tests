@@ -162,6 +162,10 @@ platform :ios do
       #force: true
       type: "appstore"
     )
+    sync_code_signing( #match
+      #force: true
+      type: "development"
+    )
     sh("security find-identity -v -p codesigning fastlane_tmp_keychain")
     sh("security find-identity -v -p codesigning")
   end
