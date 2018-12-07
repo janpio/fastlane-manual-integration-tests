@@ -160,11 +160,11 @@ platform :ios do
   lane :certificates do
     sync_code_signing( #match
       #force: true
-      type: "appstore"
+      type: "development"
     )
     sync_code_signing( #match
       #force: true
-      type: "development"
+      type: "appstore"
     )
     sh("security find-identity -v -p codesigning fastlane_tmp_keychain")
     sh("security find-identity -v -p codesigning")
