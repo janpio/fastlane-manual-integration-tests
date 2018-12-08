@@ -1,5 +1,0 @@
-language: ruby
-os: osx
-rvm:
- - 2.2
- - jruby
