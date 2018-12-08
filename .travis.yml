@@ -3,4 +3,5 @@ os: osx
 rvm:
  - 2.2
 
+before_script: cd ios
 script: bundle exec fastlane all --verbose
