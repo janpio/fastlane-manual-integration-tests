@@ -11,6 +11,11 @@ jobs:
 
   - script: |
       cd ios
+      brew update && brew install imagemagick
+    displayName: 'brew update && brew install imagemagick'
+
+  - script: |
+      cd ios
       bundle exec fastlane -v
     displayName: 'bundle exec fastlane -v'
 
