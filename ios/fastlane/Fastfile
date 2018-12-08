@@ -270,6 +270,7 @@ platform :ios do
 
   lane :config_deliver do
     write_to_file('run_precheck_before_submit(false)', 'Deliverfile')
+    write_to_file('app_icon("icon/icon-1024.png")', 'Deliverfile')
   end
 
   lane :reset_deliver_data do
