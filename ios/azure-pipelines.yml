@@ -1,0 +1,59 @@
+jobs:
+- job: macOS
+  pool:
+    vmImage: 'macOS-10.13'
+  steps:
+
+  - script: |
+      cd ios
+      bundle install --retry=3 --jobs=4
+    displayName: 'bundle install'
+
+  - script: |
+      cd ios
+      brew update && brew install imagemagick
+    displayName: 'brew update && brew install imagemagick'
+
+  - script: |
+      cd ios
+      bundle exec fastlane -v
+    displayName: 'bundle exec fastlane -v'
+
+  - script: |
+      cd ios
+      bundle exec fastlane environment
+    displayName: 'bundle exec fastlane environment'
+    env:
+      FASTLANE_PASSWORD: $(FASTLANE_PASSWORD)
+      FASTLANE_SESSION: $(FASTLANE_SESSION)
+      MATCH_PASSWORD: $(MATCH_PASSWORD)
+      FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: $(FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD)
+
+  - script: |
+      security find-identity -v -p codesigning
+    displayName: 'security find-identity -v -p codesigning'
+
+  - script: |
+      cd ios
+      bundle exec fastlane all
+    displayName: 'bundle exec fastlane all --verbose'
+    env:
+      FASTLANE_PASSWORD: $(FASTLANE_PASSWORD)
+      FASTLANE_SESSION: $(FASTLANE_SESSION)
+      MATCH_PASSWORD: $(MATCH_PASSWORD)
+      FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: $(FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD)
+
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: '/tmp'
+      Contents: |
+       **/*.log
+       !.git/**/*
+      targetFolder: $(Build.ArtifactStagingDirectory)
+    condition: always()
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: spaceship
+    condition: always()
