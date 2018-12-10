@@ -15,3 +15,4 @@ Each project contains an `all` lane that runs all individual steps and can be ex
 ## Motivation
 
 The goal of these manual integrations tests is to complement fastlane's automated test suite that is run on each commit, merge and release - as some of the more interactive or connected steps just can't be and thus aren't effectively tested by automated tests. I specifically needed this when making fastlane work on Linux and Windows, as a lot of the fastlane actions failures on these platforms only appeared in the execution of external tools and programs or during communication with external APIs.
+
