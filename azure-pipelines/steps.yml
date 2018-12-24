@@ -1,0 +1,267 @@
+steps:
+
+# config
+
+- task: UseRubyVersion@0
+  inputs:
+    versionSpec: '>= 2.5'
+  condition: not(eq(variables['Agent.OS'], 'Darwin')) # not possible on Mac
+
+# preparation
+
+- script: gem install bundler
+  displayName: 'install bundler'
+  condition: not(eq(variables['Agent.OS'], 'Darwin')) # not needed on mac
+
+- script: |
+    cd android
+    bundle install --retry=3 --jobs=4
+  displayName: 'bundle install'
+
+- script: |
+    cd android
+    bundle exec fastlane -v
+  displayName: 'bundle exec fastlane -v'
+
+## Android
+
+### Workaround: ANDROID_HOME for Ubuntu
+# https://github.com/Microsoft/azure-pipelines-image-generation/pull/310
+- script: |
+    echo $ANDROID_SDK_ROOT
+    # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=vsts&tabs=yaml%2Cbatch#set-in-script
+    echo "##vso[task.setvariable variable=ANDROID_HOME]$ANDROID_SDK_ROOT"
+  condition: eq(variables['Agent.OS'], 'Linux')
+  displayName: 'workaround: set ANDROID_HOME (Linux)'
+
+### Workaround: Understand Android SDK folder structure
+- script: |
+    ls $ANDROID_SDK_ROOT
+    echo '---'
+    ls $ANDROID_SDK_ROOT/..
+  condition: eq(variables['Agent.OS'], 'Linux')
+  displayName: 'workaround: understand Android SDK folder structure (Linux)'
+
+### Workaround: make Android tools executable
+# workaround for https://developercommunity.visualstudio.com/content/problem/357997/error-permission-on-ubuntu-1604-agent.html?childToView=382739#comment-382739
+- bash: |
+    cd $ANDROID_SDK_ROOT/../tools
+    sudo chmod +x emulator
+    cd bin
+    sudo chmod +x sdkmanager
+    sudo chmod +x avdmanager
+  condition: eq(variables['Agent.OS'], 'Linux')
+  displayName: 'workaround: make Android tools executable (Linux)'
+
+### Workaround: create ~/.android/repositories.cfg
+- bash: |
+    mkdir -p ~/.android
+    touch ~/.android/repositories.cfg
+  condition: or(eq(variables['Agent.OS'], 'Linux'), eq(variables['Agent.OS'], 'Windows_NT'))
+  displayName: 'workaround: create .android/repositories.cfg (Linux, Windows)'
+
+### Fastlane workaround: create empty adb file for Windows
+# https://github.com/fastlane/fastlane/issues/13681
+- script: |
+    c:
+    cd "%ANDROID_HOME%"
+    dir
+    echo '---1'
+    cd "$ANDROID_HOME"
+    dir
+    echo '---2'
+    cd "platform-tools"
+    echo '---3'
+    dir
+    echo '---4'
+    touch adb
+    dir
+    echo '---5'
+    copy NUL adb
+    dir
+    echo '---6'
+    echo foo > adb
+    dir
+    echo '---7'
+    xcopy adb "%ANDROID_HOME%/platform-tools" /e /i /h
+    echo '---8'
+    dir "%ANDROID_HOME%/platform-tools"
+    echo '---9'
+    touch "%ANDROID_HOME%/platform-tools/adb"
+    dir "%ANDROID_HOME%/platform-tools"
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
+  displayName: 'workaround (fastlane): create empty adb file (Windows)'
+
+# TODO make ANDROID_HOME mine
+# https://stackoverflow.com/a/48657245/252627
+# sudo chown $USER:$USER $ANDROID_HOME -R
+
+### Android Packages
+
+#### Workaround: tools vs. tools.old on Windows
+# https://stackoverflow.com/questions/43796568/cant-update-tools-android-sdk-command-line-tools-for-windows
+# / https://issuetracker.google.com/issues/38094997
+# https://stackoverflow.com/a/19517873/252627
+- script: |
+    xcopy "%ANDROID_HOME%/tools" "%ANDROID_HOME%/tools.old" /e /i /h
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
+  displayName: 'workaround: rename Android Tools folder (Windows)'
+
+#### Check what is already installed
+
+- script: |
+    "%ANDROID_HOME%/tools.old/bin/sdkmanager"  --list
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
+  displayName: 'list already installed Android packages (Windows)'
+
+- bash: |
+    $ANDROID_SDK_ROOT/../tools/bin/sdkmanager --list --sdk_root=$ANDROID_SDK_ROOT
+  condition: eq(variables['Agent.OS'], 'Linux')
+  displayName: 'list already installed Android packages (Linux)'
+
+- bash: |
+    $ANDROID_HOME/tools/bin/sdkmanager --list
+  condition: eq(variables['Agent.OS'], 'Darwin')
+  displayName: 'list already installed Android packages (Mac)'
+
+#### Install specific image
+
+- script: |
+    echo "y" | "%ANDROID_HOME%/tools.old/bin/sdkmanager" "system-images;android-27;google_apis;x86"
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
+  displayName: 'install Android image (Windows)'
+
+# this also installs and creates /tools and /emulator in the /sdk folder
+- bash: |
+    echo "y" | sudo $ANDROID_SDK_ROOT/../tools/bin/sdkmanager --install 'system-images;android-27;google_apis;x86' --sdk_root=$ANDROID_SDK_ROOT
+  condition: eq(variables['Agent.OS'], 'Linux')
+  displayName: 'install Android image (Linux)'
+
+- bash: |
+    echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-27;google_apis;x86'
+  condition: eq(variables['Agent.OS'], 'Darwin')
+  displayName: 'install Android image (Mac)'
+
+### Android Emulator
+
+#### create AVD
+
+- script: |
+    "%ANDROID_HOME%/emulator/emulator" -list-avds
+    echo ---
+    echo no | "%ANDROID_HOME%/tools/bin/avdmanager" create avd -n test_android_emulator -k "system-images;android-27;google_apis;x86" --force
+    echo ---
+    "%ANDROID_HOME%/emulator/emulator" -list-avds
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
+  displayName: 'create AVD (Windows)'
+
+- script: |
+    $ANDROID_SDK_ROOT/tools/emulator -list-avds
+    echo '---'
+    echo "no" | $ANDROID_SDK_ROOT/tools/bin/avdmanager create avd -n test_android_emulator -k 'system-images;android-27;google_apis;x86' --force
+    echo '---'
+    $ANDROID_SDK_ROOT/tools/emulator -list-avds
+  condition: eq(variables['Agent.OS'], 'Linux')
+  displayName: 'create AVD (Linux)'
+
+- script: |
+    $ANDROID_HOME/emulator/emulator -list-avds
+    echo '---'
+    echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n test_android_emulator -k 'system-images;android-27;google_apis;x86' --force
+    echo '---'
+    $ANDROID_HOME/emulator/emulator -list-avds
+  condition: eq(variables['Agent.OS'], 'Darwin')
+  displayName: 'create AVD (Mac)'
+
+#### start
+
+- script: |
+    "%ANDROID_HOME%/platform-tools/adb" devices
+    echo ---
+    "%ANDROID_HOME%/emulator/emulator" -list-avds
+    echo ---
+    "%ANDROID_HOME%/emulator/emulator" -avd test_android_emulator -no-snapshot
+    REM "%ANDROID_HOME%/platform-tools/adb" wait-for-device shell "while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82"
+    echo ---
+    "%ANDROID_HOME%/platform-tools/adb" devices
+    echo "Emulator started"
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
+  displayName: 'start Android emulator (Windows)'
+
+- script: |
+    $ANDROID_HOME/platform-tools/adb devices
+    echo '---'
+    $ANDROID_SDK_ROOT/../tools/emulator -list-avds
+    echo '---'
+    $ANDROID_SDK_ROOT/emulator/emulator -avd test_android_emulator -no-snapshot
+    echo ---
+    $ANDROID_HOME/platform-tools/adb devices
+    echo "Emulator started"
+  condition: eq(variables['Agent.OS'], 'Linux')
+  displayName: 'start Android emulator (Linux)'
+
+# - script: |
+#     nohup $ANDROID_SDK_ROOT/../tools/emulator -avd test_android_emulator -no-snapshot --sdk_root=$ANDROID_SDK_ROOT > /dev/null 2>&1 & $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
+#     echo '---'
+#     $ANDROID_HOME/platform-tools/adb devices
+#     echo "Emulator started"
+#   condition: eq(variables['Agent.OS'], 'Linux')
+#   displayName: 'start Android emulator 2 (Linux)'
+
+- script: |
+    $ANDROID_HOME/platform-tools/adb devices
+    echo '---'
+    nohup $ANDROID_HOME/emulator/emulator -avd test_android_emulator -no-snapshot > /dev/null 2>&1 & $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
+    echo '---'
+    $ANDROID_HOME/platform-tools/adb devices
+    echo "Emulator started"
+  condition: eq(variables['Agent.OS'], 'Darwin')
+  displayName: 'start Android emulator (Mac)'
+
+## secure files
+
+- task: DownloadSecureFile@1
+  inputs:
+    secureFile: google_play_key.json
+
+- task: DownloadSecureFile@1
+  inputs:
+    secureFile: zaehlerstand.keystore
+
+- script: |
+    echo %DOWNLOADSECUREFILE1_SECUREFILEPATH%
+    echo %DOWNLOADSECUREFILE2_SECUREFILEPATH%
+    REM https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=vsts&tabs=yaml%2Cbatch#set-in-script
+    echo ##vso[task.setvariable variable=JSON_KEY_FILE]%DOWNLOADSECUREFILE1_SECUREFILEPATH%
+    echo ##vso[task.setvariable variable=KEYSTORE_FILE]%DOWNLOADSECUREFILE2_SECUREFILEPATH%
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
+  displayName: 'copy secure file filenames to environment variables (Windows)'
+
+- script: |
+    echo $DOWNLOADSECUREFILE1_SECUREFILEPATH
+    echo $DOWNLOADSECUREFILE2_SECUREFILEPATH
+    # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=vsts&tabs=yaml%2Cbatch#set-in-script
+    echo "##vso[task.setvariable variable=JSON_KEY_FILE]$DOWNLOADSECUREFILE1_SECUREFILEPATH"
+    echo "##vso[task.setvariable variable=KEYSTORE_FILE]$DOWNLOADSECUREFILE2_SECUREFILEPATH"
+  condition: or(eq(variables['Agent.OS'], 'Linux'), eq(variables['Agent.OS'], 'Darwin'))
+  displayName: 'copy secure file filenames to environment variables (Linux / Mac)'
+
+## Workaround: make gradlew executable
+# workaround for https://developercommunity.visualstudio.com/content/problem/357997/error-permission-on-ubuntu-1604-agent.html?childToView=382739#comment-382739
+- bash: |
+    cd android/androidapp
+    chmod +x gradlew
+  condition: or(eq(variables['Agent.OS'], 'Linux'), eq(variables['Agent.OS'], 'Darwin'))
+  displayName: 'workaround: make gradlew executable (Linux / Mac)'
+
+# lanes
+
+- script: |
+    cd android
+    bundle exec fastlane environment
+  displayName: 'bundle exec fastlane environment'
+
+- script: |
+    cd android
+    bundle exec fastlane all
+  displayName: 'bundle exec fastlane all'

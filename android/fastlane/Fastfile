@@ -4,8 +4,8 @@ before_all do |lane, options|
   # TODO check if required env vars are set, not if an environment is provided
   # (so this will also work if someone actually sets the environment variables in the environment)
   unless lane_context[SharedValues::ENVIRONMENT]
-    UI.error("This `Fastfile` uses environments. Please supply an available environment via `--env <name>`")
-    raise('foo')
+    #UI.error("This `Fastfile` uses environments. Please supply an available environment via `--env <name>`")
+    #raise('foo')
   end
 
   @project = ENV['PROJECT']
